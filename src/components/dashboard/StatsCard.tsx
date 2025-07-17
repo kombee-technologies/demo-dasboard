@@ -10,14 +10,14 @@ const StyledDashboardCard = styled(Box)(({ theme }) => ({
   padding: theme.spacing(3),
   borderRadius: theme.shape.borderRadius,
   boxShadow: theme.shadows[2],
-  borderLeft: `4px solid ${theme.palette.primary.main}`,
+  borderLeft: `5px solid #7e00a8ff`,
   height: "100%",
   transition: "transform 0.3s, box-shadow 0.3s",
   "&:hover": {
     transform: "translateY(-4px)",
     boxShadow: theme.shadows[4],
   },
-  backgroundColor: theme.palette.background.paper,
+  backgroundColor: theme.palette.mode !== "dark" ? "#f5f5f5" : "#212121",
 }));
 
 const IconContainer = styled(Box)(({ theme }) => ({
@@ -28,10 +28,12 @@ const IconContainer = styled(Box)(({ theme }) => ({
   height: 60,
   borderRadius: "50%",
   backgroundColor:
-    theme.palette.mode === "dark"
-      ? theme.palette.primary.dark
-      : theme.palette.primary.light,
-  color: theme.palette.primary.main,
+    theme.palette.mode !== "dark"
+      ? "#f2caffff"
+      : "#7e00a8ff",
+  color: theme.palette.mode !== "dark"
+    ? "#7e00a8ff"
+    : "#f2caffff",
   flexShrink: 0,
   [theme.breakpoints.down("sm")]: {
     width: 50,

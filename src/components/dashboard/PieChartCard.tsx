@@ -28,7 +28,7 @@ const StyledChartCard = styled(Paper)(({ theme }) => ({
     transform: 'translateY(-4px)',
     boxShadow: theme.shadows[4]
   },
-  backgroundColor: theme.palette.background.paper
+  backgroundColor: theme.palette.mode !== "dark" ? "#f5f5f5" : "#212121",
 }));
 
 const ChartHeader = styled(Box)(({ theme }) => ({

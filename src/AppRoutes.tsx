@@ -3,6 +3,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import PageNotFound from "./components/PageNotFound";
 import Dashboard from "./components/dashboard/Dashboard";
 import Layout from "./components/Layout";
+import { Settings } from "@mui/icons-material";
 
 const AppRoutes = () => {
   return (
@@ -11,6 +12,7 @@ const AppRoutes = () => {
       <Route element={<Layout />}>
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/" element={<Navigate to="/dashboard" replace />} />
+        <Route path="/settings" element={<Settings />} />
       </Route>
       {/* Catch-all route for unknown paths */}
       <Route path="*" element={<PageNotFound />} />

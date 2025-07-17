@@ -17,6 +17,7 @@ import {
   Paper,
   alpha,
   Tooltip,
+  Badge,
 } from "@mui/material";
 import {
   Menu as MenuIcon,
@@ -28,15 +29,23 @@ import {
   Notifications as NotificationsIcon,
   Brightness4 as MoonIcon,
   Brightness7 as SunIcon,
+  People as EmployeesIcon,
+  Event as AttendanceIcon,
+  AttachMoney as PayrollIcon,
+  Work as RecruitmentIcon,
+  CalendarToday as LeaveIcon,
 } from "@mui/icons-material";
 import { NavLink, useLocation, Outlet } from "react-router-dom";
 import { useMediaQuery } from "@mui/material";
+
+import LogoDark from "../images/svg/logo-dark.svg";
+import LogoLight from "../images/svg/logo-light.svg";
 
 interface LayoutProps {
   children?: React.ReactNode;
 }
 
-const drawerWidth = 260;
+const drawerWidth = 280;
 
 // Enhanced theme with better typography and color palette
 const getTheme = (mode: "light" | "dark") =>
@@ -45,11 +54,11 @@ const getTheme = (mode: "light" | "dark") =>
       mode,
       primary: {
         main: mode === "light" ? "#1976d2" : "#90caf9",
-        contrastText: mode === "light" ? "#ffffff" : "#121212",
+        contrastText: mode === "light" ? "#fafafa" : "#121212",
       },
       background: {
-        default: mode === "light" ? "#f4f6f8" : "#121212",
-        paper: mode === "light" ? "#ffffff" : "#1e1e1e",
+        default: mode === "light" ? "#fafafa" : "#2c1444",
+        paper: mode === "light" ? "#fafafa" : "#1e1e1e",
       },
       text: {
         primary: mode === "light" ? "#1a2027" : "#e0e0e0",
@@ -114,23 +123,22 @@ const AppBarStyled = styled(AppBar, {
   backdropFilter: "blur(12px)",
   boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
   borderBottom: `3px solid ${alpha(theme.palette.divider, 0.1)}`,
-  transition: theme.transitions.create(["width", "margin"], {
-    easing: theme.transitions.easing.easeOut,
+  transition: theme.transitions.create(["width", "margin", "transform"], {
+    easing: theme.transitions.easing.easeInOut,
     duration: theme.transitions.duration.standard,
   }),
   ...(open && {
     marginLeft: drawerWidth,
     width: `calc(100% - ${drawerWidth}px)`,
+    transform: "translateX(0)",
   }),
 }));
 
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
   alignItems: "center",
-  padding: theme.spacing(0, 2),
   ...theme.mixins.toolbar,
   justifyContent: "space-between",
-  background: theme.palette.primary.main,
   color: theme.palette.primary.contrastText,
   boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
 }));
@@ -143,7 +151,14 @@ const DrawerStyled = styled(Drawer)(({ theme }) => ({
     boxSizing: "border-box",
     background: theme.palette.background.paper,
     borderRight: `1px solid ${alpha(theme.palette.divider, 0.2)}`,
-    transition: "all 0.3s ease-in-out",
+    transition: theme.transitions.create(["transform", "width"], {
+      easing: theme.transitions.easing.easeInOut,
+      duration: theme.transitions.duration.standard,
+    }),
+    transform: "translateX(0)",
+    "&.MuiDrawer-paperAnchorDockedLeft[hidden]": {
+      transform: `translateX(-${drawerWidth}px)`,
+    },
   },
 }));
 
@@ -153,7 +168,7 @@ const NavLinkStyled = styled(NavLink)(({ theme }) => ({
   width: "95%",
   borderRadius: theme.shape.borderRadius,
   "&.active": {
-    background: theme.palette.primary.main,
+    background: "#bf08fb",
     color: theme.palette.primary.contrastText,
     "& .MuiListItemIcon-root": {
       color: theme.palette.primary.contrastText,
@@ -163,7 +178,7 @@ const NavLinkStyled = styled(NavLink)(({ theme }) => ({
     },
   },
   "&:hover": {
-    background: alpha(theme.palette.primary.main, 0.08),
+    background: theme.palette.mode === "light" ? "#f0cdee" : "#770aa5",
     transform: "translateX(2px)",
   },
 }));
@@ -208,6 +223,8 @@ const ThemeToggleButton = styled(IconButton)(({ theme }) => ({
 
 const Layout: React.FC<LayoutProps> = () => {
   const [mode, setMode] = React.useState<"light" | "dark">("light");
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [notificationCount] = React.useState(3);
   const theme = getTheme(mode);
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const [open, setOpen] = React.useState(!isMobile);
@@ -221,6 +238,14 @@ const Layout: React.FC<LayoutProps> = () => {
     setMode((prevMode) => (prevMode === "light" ? "dark" : "light"));
   };
 
+  const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleProfileMenuClose = () => {
+    setAnchorEl(null);
+  };
+
   const getPageTitle = () => {
     const currentRoute = navItems.find(
       (item) => item.path === location.pathname
@@ -230,17 +255,27 @@ const Layout: React.FC<LayoutProps> = () => {
 
   const navItems = [
     { text: "Dashboard", path: "/dashboard", icon: <DashboardIcon /> },
+    { text: "Employees", path: "/employees", icon: <EmployeesIcon /> },
+    { text: "Attendance", path: "/attendance", icon: <AttendanceIcon /> },
+    { text: "Payroll", path: "/payroll", icon: <PayrollIcon /> },
+    { text: "Recruitment", path: "/recruitment", icon: <RecruitmentIcon /> },
+    { text: "Leave Management", path: "/leave", icon: <LeaveIcon /> },
     { text: "Settings", path: "/settings", icon: <SettingsIcon /> },
   ];
 
   const drawerContent = (
     <>
       <DrawerHeader>
-        <Typography variant="h6" sx={{ flexGrow: 1, ml: 2, fontWeight: 700 }}>
-          Acme Inc
-        </Typography>
+        <img
+          src={mode === "dark" ? LogoLight : LogoDark}
+          alt="HRMS Logo"
+          style={{ height: "30px", marginLeft: theme.spacing(3) }}
+        />
         <Tooltip title={open ? "Close Drawer" : "Open Drawer"}>
-          <IconButton onClick={handleDrawerToggle} sx={{ color: "inherit" }}>
+          <IconButton
+            onClick={handleDrawerToggle}
+            sx={{ color: theme.palette.text.primary }}
+          >
             {theme.direction === "ltr" ? (
               <ChevronLeftIcon />
             ) : (
@@ -250,7 +285,7 @@ const Layout: React.FC<LayoutProps> = () => {
         </Tooltip>
       </DrawerHeader>
       <Divider />
-      <List sx={{ pt: 1.5, px: 1.5}}>
+      <List sx={{ pt: 1.5, px: 1.5 }}>
         {navItems.map((item) => (
           <ListItem key={item.text} disablePadding>
             <NavLinkStyled to={item.path}>
@@ -316,7 +351,9 @@ const Layout: React.FC<LayoutProps> = () => {
                   },
                 }}
               >
-                <NotificationsIcon />
+                <Badge badgeContent={notificationCount} color="error">
+                  <NotificationsIcon />
+                </Badge>
               </IconButton>
             </Tooltip>
 
@@ -335,7 +372,12 @@ const Layout: React.FC<LayoutProps> = () => {
             </ThemeToggleContainer>
 
             <Tooltip title="User Profile">
-              <UserProfileButton size="small">
+              <UserProfileButton
+                size="small"
+                onClick={handleProfileMenuOpen}
+                aria-controls={anchorEl ? "account-menu" : undefined}
+                aria-haspopup="true"
+              >
                 <AccountCircleIcon />
               </UserProfileButton>
             </Tooltip>

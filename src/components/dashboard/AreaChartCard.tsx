@@ -1,5 +1,13 @@
-import React from 'react';
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import React from "react";
+import {
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
 import {
   Box,
   Typography,
@@ -7,43 +15,43 @@ import {
   styled,
   Paper,
   useMediaQuery,
-  Stack
-} from '@mui/material';
+  Stack,
+} from "@mui/material";
 
 // Styled Components
 const ChartContainer = styled(Box)(({ theme }) => ({
-  height: '350px',
-  width: '100%',
-  [theme.breakpoints.down('sm')]: {
-    height: '280px'
-  }
+  height: "350px",
+  width: "100%",
+  [theme.breakpoints.down("sm")]: {
+    height: "280px",
+  },
 }));
 
 const StyledChartCard = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(3),
   borderRadius: theme.shape.borderRadius,
   boxShadow: theme.shadows[2],
-  height: '100%',
-  display: 'flex',
-  flexDirection: 'column',
-  transition: 'transform 0.3s, box-shadow 0.3s',
-  '&:hover': {
-    transform: 'translateY(-4px)',
-    boxShadow: theme.shadows[4]
+  height: "100%",
+  display: "flex",
+  flexDirection: "column",
+  transition: "transform 0.3s, box-shadow 0.3s",
+  "&:hover": {
+    transform: "translateY(-4px)",
+    boxShadow: theme.shadows[4],
   },
-  backgroundColor: theme.palette.background.paper
+  backgroundColor: theme.palette.mode !== "dark" ? "#f5f5f5" : "#212121",
 }));
 
 const ChartHeader = styled(Box)(({ theme }) => ({
   marginBottom: theme.spacing(3),
-  display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  [theme.breakpoints.down('sm')]: {
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-    gap: theme.spacing(1)
-  }
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
+  [theme.breakpoints.down("sm")]: {
+    flexDirection: "column",
+    alignItems: "flex-start",
+    gap: theme.spacing(1),
+  },
 }));
 
 const CustomTooltip = styled(Box)(({ theme }) => ({
@@ -52,40 +60,40 @@ const CustomTooltip = styled(Box)(({ theme }) => ({
   borderRadius: theme.shape.borderRadius,
   boxShadow: theme.shadows[3],
   border: `1px solid ${theme.palette.divider}`,
-  color: theme.palette.text.primary
+  color: theme.palette.text.primary,
 }));
 
 const LegendItem = styled(Stack)(({ theme }) => ({
-  flexDirection: 'row',
-  alignItems: 'center',
+  flexDirection: "row",
+  alignItems: "center",
   marginRight: theme.spacing(2),
-  '& .legend-color': {
+  "& .legend-color": {
     width: 12,
     height: 12,
     borderRadius: 2,
-    marginRight: theme.spacing(1)
-  }
+    marginRight: theme.spacing(1),
+  },
 }));
 
 // Sample Data Generator
 const generateAreaData = () => {
-  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'];
-  return months.map(month => ({
+  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"];
+  return months.map((month) => ({
     name: month,
     productA: Math.floor(Math.random() * 5000) + 1000,
     productB: Math.floor(Math.random() * 4000) + 500,
-    productC: Math.floor(Math.random() * 3000) + 200
+    productC: Math.floor(Math.random() * 3000) + 200,
   }));
 };
 
 const AreaChartCard = () => {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const data = generateAreaData();
 
   const CustomTooltipContent = ({
     active,
-    payload
+    payload,
   }: {
     active?: boolean;
     payload?: Array<{
@@ -102,25 +110,41 @@ const AreaChartCard = () => {
             {payload[0].payload?.name}
           </Typography>
           {payload.map((entry, index) => (
-            <Box key={`tooltip-${index}`} sx={{ 
-              display: 'flex', 
-              alignItems: 'center', 
-              mb: 0.5 
-            }}>
-              <Box sx={{
-                width: 12,
-                height: 12,
-                backgroundColor: entry.color,
-                mr: 1,
-                borderRadius: '2px'
-              }} />
+            <Box
+              key={`tooltip-${index}`}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                mb: 0.5,
+              }}
+            >
+              <Box
+                sx={{
+                  width: 12,
+                  height: 12,
+                  backgroundColor: entry.color,
+                  mr: 1,
+                  borderRadius: "2px",
+                }}
+              />
               <Typography variant="body2">
                 {entry.name}: <b>${(entry.value ?? 0).toLocaleString()}</b>
               </Typography>
             </Box>
           ))}
-          <Typography variant="caption" color="text.secondary" mt={1} display="block">
-            Total: <b>${payload.reduce((sum, entry) => sum + (entry.value ?? 0), 0).toLocaleString()}</b>
+          <Typography
+            variant="caption"
+            color="text.secondary"
+            mt={1}
+            display="block"
+          >
+            Total:{" "}
+            <b>
+              $
+              {payload
+                .reduce((sum, entry) => sum + (entry.value ?? 0), 0)
+                .toLocaleString()}
+            </b>
           </Typography>
         </CustomTooltip>
       );
@@ -139,17 +163,26 @@ const AreaChartCard = () => {
             Monthly sales distribution
           </Typography>
         </Box>
-        <Box sx={{ display: 'flex' }}>
+        <Box sx={{ display: "flex" }}>
           <LegendItem>
-            <Box className="legend-color" sx={{ bgcolor: theme.palette.primary.main }} />
+            <Box
+              className="legend-color"
+              sx={{ bgcolor: theme.palette.primary.main }}
+            />
             <Typography variant="body2">Product A</Typography>
           </LegendItem>
           <LegendItem>
-            <Box className="legend-color" sx={{ bgcolor: theme.palette.secondary.main }} />
+            <Box
+              className="legend-color"
+              sx={{ bgcolor: theme.palette.secondary.main }}
+            />
             <Typography variant="body2">Product B</Typography>
           </LegendItem>
           <LegendItem>
-            <Box className="legend-color" sx={{ bgcolor: theme.palette.success.main }} />
+            <Box
+              className="legend-color"
+              sx={{ bgcolor: theme.palette.success.main }}
+            />
             <Typography variant="body2">Product C</Typography>
           </LegendItem>
         </Box>
@@ -167,17 +200,17 @@ const AreaChartCard = () => {
             }}
             stackOffset="expand" // For normalized area chart
           >
-            <CartesianGrid 
-              strokeDasharray="3 3" 
+            <CartesianGrid
+              strokeDasharray="3 3"
               vertical={false}
               stroke={theme.palette.divider}
             />
-            <XAxis 
-              dataKey="name" 
+            <XAxis
+              dataKey="name"
               tick={{ fontSize: isMobile ? 11 : 12 }}
               tickMargin={10}
             />
-            <YAxis 
+            <YAxis
               tick={{ fontSize: isMobile ? 11 : 12 }}
               tickFormatter={(value) => `${value * 100}%`}
               domain={[0, 1]}
