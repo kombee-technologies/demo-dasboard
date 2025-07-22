@@ -1,5 +1,5 @@
 import React from "react";
-import { styled, ThemeProvider, createTheme } from "@mui/material/styles";
+import { styled, createTheme, ThemeProvider } from "@mui/material/styles";
 import {
   Box,
   AppBar,
@@ -18,6 +18,7 @@ import {
   alpha,
   Tooltip,
   Badge,
+  useMediaQuery,
 } from "@mui/material";
 import {
   Menu as MenuIcon,
@@ -36,7 +37,6 @@ import {
   CalendarToday as LeaveIcon,
 } from "@mui/icons-material";
 import { NavLink, useLocation, Outlet } from "react-router-dom";
-import { useMediaQuery } from "@mui/material";
 
 import LogoDark from "../images/svg/logo-dark.svg";
 import LogoLight from "../images/svg/logo-light.svg";
@@ -47,18 +47,18 @@ interface LayoutProps {
 
 const drawerWidth = 280;
 
-// Enhanced theme with better typography and color palette
+// Enhanced theme with responsive typography
 const getTheme = (mode: "light" | "dark") =>
   createTheme({
     palette: {
       mode,
       primary: {
         main: mode === "light" ? "#1976d2" : "#90caf9",
-        contrastText: mode === "light" ? "#fafafa" : "#121212",
+        contrastText: mode === "light" ? "#ffffff" : "#121212",
       },
       background: {
-        default: mode === "light" ? "#fafafa" : "#2c1444",
-        paper: mode === "light" ? "#fafafa" : "#1e1e1e",
+        default: mode === "light" ? "#f5f5f5" : "#121212",
+        paper: mode === "light" ? "#ffffff" : "#1e1e1e",
       },
       text: {
         primary: mode === "light" ? "#1a2027" : "#e0e0e0",
@@ -70,10 +70,18 @@ const getTheme = (mode: "light" | "dark") =>
       h6: {
         fontWeight: 600,
         letterSpacing: 0.2,
+        fontSize: "1.25rem",
+        "@media (max-width: 600px)": {
+          fontSize: "1rem",
+        },
       },
       body1: {
         fontWeight: 400,
         letterSpacing: 0.3,
+        fontSize: "1rem",
+        "@media (max-width: 600px)": {
+          fontSize: "0.875rem",
+        },
       },
     },
     components: {
@@ -89,49 +97,57 @@ const getTheme = (mode: "light" | "dark") =>
           root: {
             borderRadius: 8,
             margin: "4px 8px",
-            transition: "all 0.2s ease-in-out",
+            padding: "2px 4px",
+            "@media (max-width: 600px)": {
+              margin: "2px 4px",
+              padding: "1px 2px",
+            },
           },
         },
       },
     },
   });
 
-// Styled Components with enhanced styling
+// Styled Components with responsive adjustments
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
   open?: boolean;
 }>(({ theme, open }) => ({
   flexGrow: 1,
-  padding: theme.spacing(0, 3, 3, 3),
+  padding: theme.spacing(3),
   transition: theme.transitions.create("margin", {
     easing: theme.transitions.easing.easeOut,
     duration: theme.transitions.duration.standard,
   }),
-  marginLeft: `-${drawerWidth}px`,
+  marginLeft: open ? 0 : `-${drawerWidth}px`,
   background: theme.palette.background.paper,
   minHeight: "100vh",
-  ...(open && {
+  width: "100%",
+  "@media (max-width: 960px)": {
+    padding: theme.spacing(2),
     marginLeft: 0,
-  }),
+  },
 }));
 
 const AppBarStyled = styled(AppBar, {
   shouldForwardProp: (prop) => prop !== "open",
 })<{ open?: boolean }>(({ theme, open }) => ({
   zIndex: theme.zIndex.drawer + 1,
-  background: alpha(theme.palette.background.paper, 1),
+  background: alpha(theme.palette.background.paper, 0.95),
   color: theme.palette.text.primary,
-  backdropFilter: "blur(12px)",
   boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-  borderBottom: `3px solid ${alpha(theme.palette.divider, 0.1)}`,
-  transition: theme.transitions.create(["width", "margin", "transform"], {
+  borderBottom: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+  transition: theme.transitions.create(["width", "margin"], {
     easing: theme.transitions.easing.easeInOut,
     duration: theme.transitions.duration.standard,
   }),
   ...(open && {
     marginLeft: drawerWidth,
     width: `calc(100% - ${drawerWidth}px)`,
-    transform: "translateX(0)",
   }),
+  "@media (max-width: 960px)": {
+    width: "100%",
+    marginLeft: 0,
+  },
 }));
 
 const DrawerHeader = styled("div")(({ theme }) => ({
@@ -139,8 +155,11 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   alignItems: "center",
   ...theme.mixins.toolbar,
   justifyContent: "space-between",
-  color: theme.palette.primary.contrastText,
-  boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+  padding: theme.spacing(0, 2),
+  background: theme.palette.background.paper,
+  "@media (max-width: 600px)": {
+    padding: theme.spacing(0, 1),
+  },
 }));
 
 const DrawerStyled = styled(Drawer)(({ theme }) => ({
@@ -155,9 +174,13 @@ const DrawerStyled = styled(Drawer)(({ theme }) => ({
       easing: theme.transitions.easing.easeInOut,
       duration: theme.transitions.duration.standard,
     }),
-    transform: "translateX(0)",
-    "&.MuiDrawer-paperAnchorDockedLeft[hidden]": {
-      transform: `translateX(-${drawerWidth}px)`,
+    "@media (max-width: 960px)": {
+      width: "80vw",
+      maxWidth: drawerWidth,
+    },
+    "@media (max-width: 600px)": {
+      width: "70vw",
+      maxWidth: 240,
     },
   },
 }));
@@ -188,33 +211,42 @@ const NavLinkStyled = styled(NavLink)(({ theme }) => ({
 }));
 
 const ContentContainer = styled(Paper)(({ theme }) => ({
-  padding: theme.spacing(4),
+  padding: theme.spacing(3),
   borderRadius: 12,
-  boxShadow: theme.shadows[3],
   background: theme.palette.background.paper,
+  boxShadow: theme.shadows[2],
   transition: "all 0.3s ease-in-out",
   "&:hover": {
-    boxShadow: theme.shadows[5],
+    boxShadow: theme.shadows[4],
+  },
+  "@media (max-width: 600px)": {
+    padding: theme.spacing(2),
+    borderRadius: 8,
   },
 }));
 
 const UserProfileButton = styled(IconButton)(({ theme }) => ({
-  marginLeft: theme.spacing(2),
+  marginLeft: theme.spacing(1),
   border: `1px solid ${alpha(theme.palette.divider, 0.2)}`,
   background: alpha(theme.palette.primary.main, 0.05),
   "&:hover": {
     background: alpha(theme.palette.primary.main, 0.15),
     transform: "scale(1.05)",
   },
+  "@media (max-width: 600px)": {
+    padding: theme.spacing(0.5),
+  },
 }));
 
 const ThemeToggleContainer = styled(Box)(({ theme }) => ({
   display: "flex",
   alignItems: "center",
-  marginLeft: theme.spacing(2),
-  background: alpha(theme.palette.background.paper, 0.1),
-  borderRadius: theme.shape.borderRadius,
-  padding: theme.spacing(0.5, 1),
+  marginLeft: theme.spacing(1),
+  padding: theme.spacing(0.5),
+  "@media (max-width: 600px)": {
+    marginLeft: theme.spacing(0.5),
+    padding: theme.spacing(0.3),
+  },
 }));
 
 const ThemeToggleButton = styled(IconButton)(({ theme }) => ({
@@ -223,15 +255,19 @@ const ThemeToggleButton = styled(IconButton)(({ theme }) => ({
     background: alpha(theme.palette.primary.main, 0.15),
     transform: "scale(1.05)",
   },
+  "@media (max-width: 600px)": {
+    padding: theme.spacing(0.5),
+  },
 }));
 
 const Layout: React.FC<LayoutProps> = () => {
   const [mode, setMode] = React.useState<"light" | "dark">("light");
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [notificationCount] = React.useState(3);
+  const [notificationCount] = React.useState<number>(3);
   const theme = getTheme(mode);
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
-  const [open, setOpen] = React.useState(!isMobile);
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+  const [open, setOpen] = React.useState<boolean>(!isMobile);
   const location = useLocation();
 
   const handleDrawerToggle = () => {
@@ -273,7 +309,10 @@ const Layout: React.FC<LayoutProps> = () => {
         <img
           src={mode === "dark" ? LogoLight : LogoDark}
           alt="HRMS Logo"
-          style={{ height: "30px", marginLeft: theme.spacing(3) }}
+          style={{
+            height: isSmallScreen ? "24px" : "30px",
+            marginLeft: theme.spacing(2),
+          }}
         />
         <Tooltip title={open ? "Close Drawer" : "Open Drawer"}>
           <IconButton
@@ -289,15 +328,20 @@ const Layout: React.FC<LayoutProps> = () => {
         </Tooltip>
       </DrawerHeader>
       <Divider />
-      <List sx={{ pt: 1.5, px: 1.5 }}>
+      <List sx={{ pt: 1, px: 1 }}>
         {navItems.map((item) => (
           <ListItem key={item.text} disablePadding>
             <NavLinkStyled to={item.path}>
               <ListItemButton>
-                <ListItemIcon sx={{ minWidth: 45 }}>{item.icon}</ListItemIcon>
+                <ListItemIcon sx={{ minWidth: isSmallScreen ? 36 : 45 }}>
+                  {item.icon}
+                </ListItemIcon>
                 <ListItemText
                   primary={item.text}
-                  primaryTypographyProps={{ fontWeight: 500 }}
+                  primaryTypographyProps={{
+                    fontWeight: 500,
+                    fontSize: isSmallScreen ? "0.875rem" : "1rem",
+                  }}
                 />
               </ListItemButton>
             </NavLinkStyled>
@@ -310,12 +354,16 @@ const Layout: React.FC<LayoutProps> = () => {
   return (
     <ThemeProvider theme={theme}>
       <Box
-        sx={{ display: "flex", background: theme.palette.background.default }}
+        sx={{
+          display: "flex",
+          background: theme.palette.background.default,
+          minHeight: "100vh",
+        }}
       >
         <CssBaseline />
         {/* Header */}
         <AppBarStyled position="fixed" open={open}>
-          <Toolbar sx={{ minHeight: "72px" }}>
+          <Toolbar sx={{ minHeight: isSmallScreen ? "56px" : "72px" }}>
             {!open && (
               <Tooltip title="Open Drawer">
                 <IconButton
@@ -323,7 +371,7 @@ const Layout: React.FC<LayoutProps> = () => {
                   edge="start"
                   onClick={handleDrawerToggle}
                   sx={{
-                    mr: 2,
+                    mr: 1,
                     color: theme.palette.text.primary,
                     "&:hover": {
                       background: alpha(theme.palette.primary.main, 0.1),
@@ -339,7 +387,12 @@ const Layout: React.FC<LayoutProps> = () => {
               variant="h6"
               noWrap
               component="div"
-              sx={{ fontWeight: 600, flexGrow: 1, letterSpacing: 0.2 }}
+              sx={{
+                fontWeight: 600,
+                flexGrow: 1,
+                letterSpacing: 0.2,
+                fontSize: isSmallScreen ? "1rem" : "1.25rem",
+              }}
             >
               {getPageTitle()}
             </Typography>
@@ -348,7 +401,7 @@ const Layout: React.FC<LayoutProps> = () => {
               <IconButton
                 color="inherit"
                 sx={{
-                  mr: 1,
+                  mr: 0.5,
                   "&:hover": {
                     background: alpha(theme.palette.primary.main, 0.1),
                     transform: "scale(1.05)",
@@ -403,15 +456,9 @@ const Layout: React.FC<LayoutProps> = () => {
         {/* Main Content */}
         <Main open={open}>
           <DrawerHeader />
-          <Box
-            sx={{
-              minHeight: "calc(100vh - 120px)",
-            }}
-          >
-            <ContentContainer elevation={0}>
-              <Outlet />
-            </ContentContainer>
-          </Box>
+          <ContentContainer elevation={0}>
+            <Outlet />
+          </ContentContainer>
         </Main>
       </Box>
     </ThemeProvider>

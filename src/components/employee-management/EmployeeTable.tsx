@@ -34,9 +34,7 @@ interface Employee {
 const StyledBox = styled(Box)(({ theme }) => ({
   width: "100%",
   padding: theme.spacing(2),
-  backgroundColor: theme.palette.background.default,
-  borderRadius: theme.shape.borderRadius,
-  boxShadow: theme.shadows[2],
+  // backgroundColor: theme.palette.background.default,
   [theme.breakpoints.down("sm")]: {
     padding: theme.spacing(1),
   },
