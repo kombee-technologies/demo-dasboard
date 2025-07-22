@@ -176,9 +176,13 @@ const NavLinkStyled = styled(NavLink)(({ theme }) => ({
     "& .MuiListItemText-primary": {
       fontWeight: theme.typography.fontWeightMedium,
     },
+    "&:hover": {
+      background: "#9c06c9", // Darker shade for active link on hover
+      transform: "translateX(2px)",
+    },
   },
   "&:hover": {
-    background: theme.palette.mode === "light" ? "#f0cdee" : "#770aa5",
+    background: theme.palette.mode === "light" ? "#f0cdee" : "#770aa5", // Lighter shade for non-active links
     transform: "translateX(2px)",
   },
 }));
