@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   Typography,
@@ -16,6 +16,7 @@ import AddIcon from "@mui/icons-material/Add";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import AddEditEmployeeDetails from "./AddEditEmployeeDetails";
 
 // Interface for employee data
 interface Employee {
@@ -80,7 +81,7 @@ const StyledButton = styled(Button)(({ theme }) => ({
 }));
 
 // Employee data
-const employees: Employee[] = [
+const employeesList: Employee[] = [
   {
     id: 1,
     name: "John Doe",
@@ -216,6 +217,11 @@ const employees: Employee[] = [
 const EmployeeTable: React.FC = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const [employees, setEmployees] = useState<Employee[]>(employeesList);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [selectedEmployee, setSelectedEmployee] = useState<
+    Employee | undefined
+  >(undefined);
 
   const columns: GridColDef<Employee>[] = [
     {
@@ -288,7 +294,10 @@ const EmployeeTable: React.FC = () => {
           <Tooltip title="Edit employee">
             <IconButton
               size="small"
-              onClick={() => console.log(`Edit ${params.row.id}`)}
+              onClick={() => {
+                setSelectedEmployee(params.row);
+                setOpenDialog(true);
+              }}
             >
               <EditIcon fontSize="small" />
             </IconButton>
@@ -308,7 +317,18 @@ const EmployeeTable: React.FC = () => {
   ];
 
   const handleAddEmployee = () => {
-    console.log("Add new employee clicked");
+    setSelectedEmployee(undefined);
+    setOpenDialog(true);
+  };
+
+  const handleSubmit = (employee: Employee) => {
+    if (employee.id) {
+      setEmployees((prev) =>
+        prev.map((emp) => (emp.id === employee.id ? employee : emp))
+      );
+    } else {
+      setEmployees((prev) => [...prev, { ...employee, id: Date.now() }]);
+    }
   };
 
   return (
@@ -364,6 +384,12 @@ const EmployeeTable: React.FC = () => {
           }}
         />
       </Box>
+      <AddEditEmployeeDetails
+        open={openDialog}
+        onClose={() => setOpenDialog(false)}
+        employee={selectedEmployee}
+        onSubmit={handleSubmit}
+      />
     </StyledBox>
   );
 };
