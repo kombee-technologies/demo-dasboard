@@ -6,6 +6,8 @@ import Layout from "./components/Layout";
 import { Settings } from "@mui/icons-material";
 import EmployeeTable from "./components/employee-management/EmployeeTable";
 import AttendanceTable from "./components/attendance-management/AttendanceTable";
+import PayrollTable from "./components/payroll-management/PayrollTable";
+import RecruitmentTable from "./components/recruitment-management/RecruitmentTable";
 
 const AppRoutes = () => {
   return (
@@ -16,6 +18,8 @@ const AppRoutes = () => {
         <Route path="/" element={<Navigate to="/dashboard" replace />} />
         <Route path="/employees" element={<EmployeeTable />} />
         <Route path="/attendance" element={<AttendanceTable />} />
+        <Route path="/payroll" element={<PayrollTable />} />
+        <Route path="/recruitment" element={<RecruitmentTable />} />
 
         {/* Add other routes here as needed */}
         <Route path="/settings" element={<Settings />} />
