@@ -134,7 +134,7 @@ const AppBarStyled = styled(AppBar, {
   zIndex: theme.zIndex.drawer + 1,
   background: alpha(theme.palette.background.paper, 0.95),
   color: theme.palette.text.primary,
-  boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+  boxShadow: "0 0px 0px rgba(0,0,0,0.1)",
   borderBottom: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
   transition: theme.transitions.create(["width", "margin"], {
     easing: theme.transitions.easing.easeInOut,

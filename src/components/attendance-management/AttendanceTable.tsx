@@ -16,18 +16,19 @@ import AddIcon from "@mui/icons-material/Add";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import AddEditEmployeeDetails from "./AddEditEmployeeDetails";
+import AddEditAttendanceDetails from "./AddEditAttendanceDetails";
+// import AddEditAttendanceDetails from "./AddEditAttendanceDetails";
 
-// Interface for employee data
-interface Employee {
+// Interface for attendance data
+interface Attendance {
   id: number;
-  name: string;
-  email: string;
-  position: string;
-  department: string;
-  joinDate: string;
-  salary: string;
+  employeeName: string;
+  employeeId: number;
+  date: string;
+  checkIn: string;
+  checkOut: string;
   status: string;
+  hoursWorked: string;
 }
 
 // Styled Components
@@ -51,17 +52,17 @@ const StatusChip = styled(Chip, {
   borderRadius: theme.shape.borderRadius,
   padding: theme.spacing(0.5, 1),
   transition: "all 0.3s ease",
-  ...(status === "Active" && {
+  ...(status === "Present" && {
     background: `linear-gradient(45deg, ${theme.palette.success.light} 30%, ${theme.palette.success.main} 90%)`,
     color: theme.palette.success.contrastText,
   }),
-  ...(status === "On Leave" && {
-    background: `linear-gradient(45deg, ${theme.palette.warning.light} 30%, ${theme.palette.warning.main} 90%)`,
-    color: theme.palette.warning.contrastText,
-  }),
-  ...(status === "Terminated" && {
+  ...(status === "Absent" && {
     background: `linear-gradient(45deg, ${theme.palette.error.light} 30%, ${theme.palette.error.main} 90%)`,
     color: theme.palette.error.contrastText,
+  }),
+  ...(status === "Late" && {
+    background: `linear-gradient(45deg, ${theme.palette.warning.light} 30%, ${theme.palette.warning.main} 90%)`,
+    color: theme.palette.warning.contrastText,
   }),
   "&:hover": {
     transform: "scale(1.05)",
@@ -98,152 +99,72 @@ const StyledIconButton = styled(IconButton)(({ theme }) => ({
   transition: "all 0.2s ease",
 }));
 
-// Employee data
-const employeesList: Employee[] = [
+// Sample attendance data
+const attendanceList: Attendance[] = [
   {
     id: 1,
-    name: "John Doe",
-    email: "john.doe@example.com",
-    position: "Software Engineer",
-    department: "Engineering",
-    joinDate: "2020-05-15",
-    salary: "$85,000",
-    status: "Active",
+    employeeName: "John Doe",
+    employeeId: 1,
+    date: "2025-07-20",
+    checkIn: "09:00 AM",
+    checkOut: "05:00 PM",
+    status: "Present",
+    hoursWorked: "8h",
   },
   {
     id: 2,
-    name: "Jane Smith",
-    email: "jane.smith@example.com",
-    position: "Product Manager",
-    department: "Product",
-    joinDate: "2019-08-22",
-    salary: "$95,000",
-    status: "Active",
+    employeeName: "Jane Smith",
+    employeeId: 2,
+    date: "2025-07-20",
+    checkIn: "09:15 AM",
+    checkOut: "04:45 PM",
+    status: "Late",
+    hoursWorked: "7.5h",
   },
   {
     id: 3,
-    name: "Robert Johnson",
-    email: "robert.j@example.com",
-    position: "UX Designer",
-    department: "Design",
-    joinDate: "2021-01-10",
-    salary: "$75,000",
-    status: "On Leave",
+    employeeName: "Robert Johnson",
+    employeeId: 3,
+    date: "2025-07-20",
+    checkIn: "",
+    checkOut: "",
+    status: "Absent",
+    hoursWorked: "0h",
   },
   {
     id: 4,
-    name: "Emily Davis",
-    email: "emily.d@example.com",
-    position: "HR Specialist",
-    department: "Human Resources",
-    joinDate: "2018-11-05",
-    salary: "$65,000",
-    status: "Active",
+    employeeName: "Emily Davis",
+    employeeId: 4,
+    date: "2025-07-20",
+    checkIn: "08:45 AM",
+    checkOut: "05:15 PM",
+    status: "Present",
+    hoursWorked: "8.5h",
   },
   {
     id: 5,
-    name: "Michael Wilson",
-    email: "michael.w@example.com",
-    position: "DevOps Engineer",
-    department: "Engineering",
-    joinDate: "2020-03-18",
-    salary: "$90,000",
-    status: "Active",
-  },
-  {
-    id: 6,
-    name: "Sarah Brown",
-    email: "sarah.b@example.com",
-    position: "Marketing Lead",
-    department: "Marketing",
-    joinDate: "2019-06-30",
-    salary: "$80,000",
-    status: "Terminated",
-  },
-  {
-    id: 7,
-    name: "David Lee",
-    email: "david.lee@example.com",
-    position: "Data Analyst",
-    department: "Analytics",
-    joinDate: "2021-07-12",
-    salary: "$70,000",
-    status: "Active",
-  },
-  {
-    id: 8,
-    name: "Jessica Taylor",
-    email: "jessica.t@example.com",
-    position: "QA Engineer",
-    department: "Engineering",
-    joinDate: "2020-09-25",
-    salary: "$78,000",
-    status: "Active",
-  },
-  {
-    id: 9,
-    name: "Daniel Martinez",
-    email: "daniel.m@example.com",
-    position: "Sales Executive",
-    department: "Sales",
-    joinDate: "2021-02-14",
-    salary: "$72,000",
-    status: "On Leave",
-  },
-  {
-    id: 10,
-    name: "Olivia Anderson",
-    email: "olivia.a@example.com",
-    position: "Finance Manager",
-    department: "Finance",
-    joinDate: "2018-04-08",
-    salary: "$110,000",
-    status: "Active",
-  },
-  {
-    id: 11,
-    name: "William Thomas",
-    email: "william.t@example.com",
-    position: "Frontend Developer",
-    department: "Engineering",
-    joinDate: "2021-05-20",
-    salary: "$82,000",
-    status: "Active",
-  },
-  {
-    id: 12,
-    name: "Sophia White",
-    email: "sophia.w@example.com",
-    position: "Content Writer",
-    department: "Marketing",
-    joinDate: "2020-10-15",
-    salary: "$60,000",
-    status: "Active",
-  },
-  {
-    id: 13,
-    name: "James Harris",
-    email: "james.h@example.com",
-    position: "Backend Developer",
-    department: "Engineering",
-    joinDate: "2019-12-03",
-    salary: "$88,000",
-    status: "Terminated",
+    employeeName: "Michael Wilson",
+    employeeId: 5,
+    date: "2025-07-20",
+    checkIn: "09:05 AM",
+    checkOut: "05:00 PM",
+    status: "Present",
+    hoursWorked: "7.9h",
   },
 ];
 
-const EmployeeTable: React.FC = () => {
+const AttendanceTable: React.FC = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const [employees, setEmployees] = useState<Employee[]>(employeesList);
+  const [attendance, setAttendance] = useState<Attendance[]>(attendanceList);
   const [openDialog, setOpenDialog] = useState(false);
-  const [selectedEmployee, setSelectedEmployee] = useState<
-    Employee | undefined
+  const [selectedAttendance, setSelectedAttendance] = useState<
+    Attendance | undefined
   >(undefined);
 
-  const columns: GridColDef<Employee>[] = [
+  const columns: GridColDef<Attendance>[] = [
     {
-      field: "name",
+      field: "employeeName",
       headerName: "Employee",
       flex: 1,
       minWidth: 200,
@@ -251,40 +172,18 @@ const EmployeeTable: React.FC = () => {
         <Box sx={{ display: "flex", alignItems: "center" }}>
           <Box>
             <Typography variant="body1" fontWeight={600} color="text.primary">
-              {params.row.name}
+              {params.row.employeeName}
             </Typography>
             <Typography variant="caption" color="text.secondary">
-              {params.row.email}
+              ID: {params.row.employeeId}
             </Typography>
           </Box>
         </Box>
       ),
     },
     {
-      field: "position",
-      headerName: "Position",
-      flex: 1,
-      minWidth: 150,
-      renderCell: (params) => (
-        <Typography variant="body2" color="text.primary">
-          {params.value}
-        </Typography>
-      ),
-    },
-    {
-      field: "department",
-      headerName: "Department",
-      flex: 1,
-      minWidth: 150,
-      renderCell: (params) => (
-        <Typography variant="body2" color="text.primary">
-          {params.value}
-        </Typography>
-      ),
-    },
-    {
-      field: "joinDate",
-      headerName: "Join Date",
+      field: "date",
+      headerName: "Date",
       flex: 1,
       minWidth: 120,
       renderCell: (params) => (
@@ -294,10 +193,32 @@ const EmployeeTable: React.FC = () => {
       ),
     },
     {
-      field: "salary",
-      headerName: "Salary",
+      field: "checkIn",
+      headerName: "Check In",
       flex: 1,
-      minWidth: 100,
+      minWidth: 120,
+      renderCell: (params) => (
+        <Typography variant="body2" color="text.primary">
+          {params.value || "-"}
+        </Typography>
+      ),
+    },
+    {
+      field: "checkOut",
+      headerName: "Check Out",
+      flex: 1,
+      minWidth: 120,
+      renderCell: (params) => (
+        <Typography variant="body2" color="text.primary">
+          {params.value || "-"}
+        </Typography>
+      ),
+    },
+    {
+      field: "hoursWorked",
+      headerName: "Hours Worked",
+      flex: 1,
+      minWidth: 120,
       renderCell: (params) => (
         <Typography variant="body2" color="text.primary" fontWeight={500}>
           {params.value}
@@ -331,18 +252,18 @@ const EmployeeTable: React.FC = () => {
               <VisibilityIcon fontSize="small" color="primary" />
             </StyledIconButton>
           </Tooltip>
-          <Tooltip title="Edit employee">
+          <Tooltip title="Edit attendance">
             <StyledIconButton
               size="small"
               onClick={() => {
-                setSelectedEmployee(params.row);
+                setSelectedAttendance(params.row);
                 setOpenDialog(true);
               }}
             >
               <EditIcon fontSize="small" color="secondary" />
             </StyledIconButton>
           </Tooltip>
-          <Tooltip title="Delete employee">
+          <Tooltip title="Delete attendance">
             <StyledIconButton
               size="small"
               onClick={() => console.log(`Delete ${params.row.id}`)}
@@ -355,18 +276,23 @@ const EmployeeTable: React.FC = () => {
     },
   ];
 
-  const handleAddEmployee = () => {
-    setSelectedEmployee(undefined);
+  const handleAddAttendance = () => {
+    setSelectedAttendance(undefined);
     setOpenDialog(true);
   };
 
-  const handleSubmit = (employee: Employee) => {
-    if (employee.id) {
-      setEmployees((prev) =>
-        prev.map((emp) => (emp.id === employee.id ? employee : emp))
+  const handleSubmit = (attendanceRecord: Attendance) => {
+    if (attendanceRecord.id) {
+      setAttendance((prev) =>
+        prev.map((rec) =>
+          rec.id === attendanceRecord.id ? attendanceRecord : rec
+        )
       );
     } else {
-      setEmployees((prev) => [...prev, { ...employee, id: Date.now() }]);
+      setAttendance((prev) => [
+        ...prev,
+        { ...attendanceRecord, id: Date.now() },
+      ]);
     }
   };
 
@@ -383,15 +309,15 @@ const EmployeeTable: React.FC = () => {
           fontWeight={700}
           color="text.primary"
         >
-          Employee Management
+          Attendance Management
         </Typography>
         <StyledButton
           variant="contained"
           startIcon={<AddIcon />}
-          onClick={handleAddEmployee}
+          onClick={handleAddAttendance}
           fullWidth={isMobile}
         >
-          Add Employee
+          Add Attendance
         </StyledButton>
       </Stack>
       <Box
@@ -402,7 +328,7 @@ const EmployeeTable: React.FC = () => {
         }}
       >
         <DataGrid
-          rows={employees}
+          rows={attendance}
           columns={columns}
           initialState={{
             pagination: { paginationModel: { pageSize: 10 } },
@@ -450,14 +376,14 @@ const EmployeeTable: React.FC = () => {
           }}
         />
       </Box>
-      <AddEditEmployeeDetails
+      <AddEditAttendanceDetails
         open={openDialog}
         onClose={() => setOpenDialog(false)}
-        employee={selectedEmployee}
+        attendance={selectedAttendance}
         onSubmit={handleSubmit}
       />
     </StyledBox>
   );
 };
 
-export default EmployeeTable;
+export default AttendanceTable;
