@@ -9,70 +9,87 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import {
-  Box,
-  Typography,
-  useTheme,
-  styled,
-  Paper,
-  useMediaQuery,
-  Stack,
-} from "@mui/material";
+import { Box, Typography, useTheme, styled, Stack } from "@mui/material";
 
 // Styled Components
-const ChartContainer = styled(Box)(({ theme }) => ({
-  height: "350px",
-  width: "100%",
-  [theme.breakpoints.down("sm")]: {
-    height: "300px",
-  },
-}));
-
-const StyledChartCard = styled(Paper)(({ theme }) => ({
-  padding: theme.spacing(3),
-  borderRadius: theme.shape.borderRadius,
-  boxShadow: theme.shadows[2],
+const StyledChartCard = styled(Box)(({ theme }) => ({
+  padding: theme.spacing(2, 3),
+  borderRadius: 1.5,
+  boxShadow: theme.shadows[3],
+  backgroundColor: theme.palette.background.paper,
+  transition: "all 0.3s ease-in-out",
   height: "100%",
   display: "flex",
   flexDirection: "column",
-  transition: "transform 0.3s, box-shadow 0.3s",
   "&:hover": {
     transform: "translateY(-4px)",
-    boxShadow: theme.shadows[4],
+    boxShadow: theme.shadows[5],
   },
-  backgroundColor: theme.palette.mode !== "dark" ? "#f5f5f5" : "#212121",
+  [theme.breakpoints.down("sm")]: {
+    padding: theme.spacing(1.5, 2),
+  },
+  [theme.breakpoints.down("xs")]: {
+    padding: theme.spacing(1, 1.5),
+  },
+}));
+
+const ChartContainer = styled(Box)(({ theme }) => ({
+  height: "360px",
+  width: "100%",
+  [theme.breakpoints.down("md")]: {
+    height: "320px",
+  },
+  [theme.breakpoints.down("sm")]: {
+    height: "260px",
+  },
+  [theme.breakpoints.down("xs")]: {
+    height: "220px",
+  },
 }));
 
 const ChartHeader = styled(Box)(({ theme }) => ({
-  marginBottom: theme.spacing(3),
+  marginBottom: theme.spacing(2),
   display: "flex",
   justifyContent: "space-between",
   alignItems: "center",
   [theme.breakpoints.down("sm")]: {
     flexDirection: "column",
     alignItems: "flex-start",
-    gap: theme.spacing(1),
+    gap: theme.spacing(1.5),
   },
 }));
 
 const CustomTooltip = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
-  padding: theme.spacing(1.5),
+  padding: theme.spacing(1, 1.5),
   borderRadius: theme.shape.borderRadius,
   boxShadow: theme.shadows[3],
   border: `1px solid ${theme.palette.divider}`,
   color: theme.palette.text.primary,
+  maxWidth: "220px",
+  [theme.breakpoints.down("sm")]: {
+    maxWidth: "180px",
+    padding: theme.spacing(0.75, 1),
+  },
 }));
 
 const LegendItem = styled(Stack)(({ theme }) => ({
   flexDirection: "row",
   alignItems: "center",
   marginRight: theme.spacing(2),
+  marginBottom: theme.spacing(0.5),
   "& .legend-color": {
     width: 12,
     height: 12,
     borderRadius: "50%",
     marginRight: theme.spacing(1),
+  },
+  [theme.breakpoints.down("sm")]: {
+    marginRight: theme.spacing(1.5),
+    "& .legend-color": {
+      width: 10,
+      height: 10,
+    },
   },
 }));
 
@@ -91,7 +108,6 @@ const generateScatterData = () => {
 
 const ScatterChartCard = () => {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const data = generateScatterData();
   const colors = [
     theme.palette.primary.main,
@@ -117,22 +133,36 @@ const ScatterChartCard = () => {
       const { x, y, z, payload: pointPayload } = payload[0];
       return (
         <CustomTooltip>
-          <Typography variant="subtitle2" fontWeight={600} mb={1}>
+          <Typography
+            variant="subtitle2"
+            fontWeight={600}
+            mb={0.5}
+            sx={{ fontSize: { xs: "0.75rem", sm: "0.875rem" } }}
+          >
             {pointPayload.category}
           </Typography>
-          <Typography variant="body2">
+          <Typography
+            variant="body2"
+            sx={{ fontSize: { xs: "0.75rem", sm: "0.875rem" } }}
+          >
             <Box component="span" sx={{ color: theme.palette.text.secondary }}>
               Price:{" "}
             </Box>
             <b>${x}</b>
           </Typography>
-          <Typography variant="body2">
+          <Typography
+            variant="body2"
+            sx={{ fontSize: { xs: "0.75rem", sm: "0.875rem" } }}
+          >
             <Box component="span" sx={{ color: theme.palette.text.secondary }}>
               Rating:{" "}
             </Box>
             <b>{y}/100</b>
           </Typography>
-          <Typography variant="body2">
+          <Typography
+            variant="body2"
+            sx={{ fontSize: { xs: "0.75rem", sm: "0.875rem" } }}
+          >
             <Box component="span" sx={{ color: theme.palette.text.secondary }}>
               Sales:{" "}
             </Box>
@@ -148,21 +178,45 @@ const ScatterChartCard = () => {
     <StyledChartCard>
       <ChartHeader>
         <Box>
-          <Typography variant="h6" fontWeight={600}>
+          <Typography
+            variant="h6"
+            fontWeight={600}
+            sx={{
+              fontSize: { xs: "1.125rem", sm: "1.25rem", md: "1.5rem" },
+            }}
+          >
             Product Performance
           </Typography>
-          <Typography variant="body2" color="text.secondary">
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{
+              fontSize: { xs: "0.75rem", sm: "0.875rem" },
+            }}
+          >
             Price vs Rating correlation
           </Typography>
         </Box>
-        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
+        <Box
+          sx={{
+            display: "flex",
+            flexWrap: "wrap",
+            gap: theme.spacing(0.5, 1),
+            justifyContent: { xs: "flex-start", sm: "flex-end" },
+          }}
+        >
           {data.map((item, index) => (
             <LegendItem key={index}>
               <Box
                 className="legend-color"
                 sx={{ bgcolor: colors[index % colors.length] }}
               />
-              <Typography variant="body2">{item.category}</Typography>
+              <Typography
+                variant="body2"
+                sx={{ fontSize: { xs: "0.75rem", sm: "0.875rem" } }}
+              >
+                {item.category}
+              </Typography>
             </LegendItem>
           ))}
         </Box>
@@ -173,9 +227,9 @@ const ScatterChartCard = () => {
           <ScatterChart
             margin={{
               top: 20,
-              right: isMobile ? 10 : 20,
-              left: isMobile ? -20 : 0,
-              bottom: 0,
+              right: theme.breakpoints.down("sm") ? 10 : 20,
+              left: theme.breakpoints.down("sm") ? -10 : 0,
+              bottom: 10,
             }}
           >
             <CartesianGrid
@@ -187,12 +241,12 @@ const ScatterChartCard = () => {
               dataKey="x"
               name="Price"
               unit="$"
-              tick={{ fontSize: isMobile ? 10 : 12 }}
+              tick={{ fontSize: theme.breakpoints.down("sm") ? 10 : 12 }}
               label={{
                 value: "Price ($)",
                 position: "insideBottomRight",
                 offset: -10,
-                fontSize: isMobile ? 11 : 12,
+                fontSize: theme.breakpoints.down("sm") ? 10 : 12,
               }}
             />
             <YAxis
@@ -200,18 +254,19 @@ const ScatterChartCard = () => {
               dataKey="y"
               name="Rating"
               unit="/100"
-              tick={{ fontSize: isMobile ? 10 : 12 }}
+              tick={{ fontSize: theme.breakpoints.down("sm") ? 10 : 12 }}
+              width={theme.breakpoints.down("sm") ? 40 : 50}
               label={{
                 value: "Rating (/100)",
                 angle: -90,
                 position: "insideLeft",
-                fontSize: isMobile ? 11 : 12,
+                fontSize: theme.breakpoints.down("sm") ? 10 : 12,
               }}
             />
             <ZAxis
               type="number"
               dataKey="z"
-              range={[60, 400]}
+              range={[theme.breakpoints.down("sm") ? 40 : 60, theme.breakpoints.down("sm") ? 300 : 400]}
               name="Sales"
               unit="k"
             />
@@ -227,7 +282,7 @@ const ScatterChartCard = () => {
                 fill={colors[index % colors.length]}
                 fillOpacity={0.8}
                 stroke={theme.palette.background.paper}
-                strokeWidth={1}
+                strokeWidth={theme.breakpoints.down("sm") ? 0.5 : 1}
               />
             ))}
           </ScatterChart>

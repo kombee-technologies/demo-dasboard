@@ -9,58 +9,69 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import {
-  Box,
-  Typography,
-  useTheme,
-  styled,
-  Paper,
-  useMediaQuery,
-} from "@mui/material";
+import { Box, Typography, useTheme } from "@mui/material";
+import { styled } from "@mui/material/styles";
 
 // Styled Components
-const ChartContainer = styled(Box)(({ theme }) => ({
-  height: "350px",
-  width: "100%",
-  [theme.breakpoints.down("sm")]: {
-    height: "280px",
-  },
-}));
-
-const StyledChartCard = styled(Paper)(({ theme }) => ({
-  padding: theme.spacing(3),
-  borderRadius: theme.shape.borderRadius,
-  boxShadow: theme.shadows[2],
+const StyledChartCard = styled(Box)(({ theme }) => ({
+  padding: theme.spacing(2, 3),
+  borderRadius: 1.5,
+  boxShadow: theme.shadows[3],
+  backgroundColor: theme.palette.background.paper,
+  transition: "all 0.3s ease-in-out",
   height: "100%",
   display: "flex",
   flexDirection: "column",
-  transition: "transform 0.3s, box-shadow 0.3s",
   "&:hover": {
     transform: "translateY(-4px)",
-    boxShadow: theme.shadows[4],
+    boxShadow: theme.shadows[5],
   },
-  backgroundColor: theme.palette.mode !== "dark" ? "#f5f5f5" : "#212121",
+  [theme.breakpoints.down("sm")]: {
+    padding: theme.spacing(1.5, 2),
+  },
+  [theme.breakpoints.down("xs")]: {
+    padding: theme.spacing(1, 1.5),
+  },
+}));
+
+const ChartContainer = styled(Box)(({ theme }) => ({
+  height: "360px",
+  width: "100%",
+  [theme.breakpoints.down("md")]: {
+    height: "320px",
+  },
+  [theme.breakpoints.down("sm")]: {
+    height: "260px",
+  },
+  [theme.breakpoints.down("xs")]: {
+    height: "220px",
+  },
 }));
 
 const ChartHeader = styled(Box)(({ theme }) => ({
-  marginBottom: theme.spacing(3),
+  marginBottom: theme.spacing(2),
   display: "flex",
   justifyContent: "space-between",
   alignItems: "center",
   [theme.breakpoints.down("sm")]: {
     flexDirection: "column",
     alignItems: "flex-start",
-    gap: theme.spacing(1),
+    gap: theme.spacing(1.5),
   },
 }));
 
 const CustomTooltip = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
-  padding: theme.spacing(1.5),
+  padding: theme.spacing(1, 1.5),
   borderRadius: theme.shape.borderRadius,
   boxShadow: theme.shadows[3],
   border: `1px solid ${theme.palette.divider}`,
   color: theme.palette.text.primary,
+  maxWidth: "220px",
+  [theme.breakpoints.down("sm")]: {
+    maxWidth: "180px",
+    padding: theme.spacing(0.75, 1),
+  },
 }));
 
 // Sample Data Generator
@@ -86,7 +97,6 @@ const generateLineData = () => {
 
 const LineChartCard = () => {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const data = generateLineData();
 
   const CustomTooltipContent = ({
@@ -104,17 +114,18 @@ const LineChartCard = () => {
     if (active && payload && payload.length) {
       return (
         <CustomTooltip>
-          <Typography variant="subtitle2" fontWeight={600} mb={1}>
+          <Typography
+            variant="subtitle2"
+            fontWeight={600}
+            mb={0.5}
+            sx={{ fontSize: { xs: "0.75rem", sm: "0.875rem" } }}
+          >
             {payload[0].payload?.name}
           </Typography>
           {payload.map((entry, index) => (
             <Box
               key={`tooltip-${index}`}
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                mb: 0.5,
-              }}
+              sx={{ display: "flex", alignItems: "center", mb: 0.5 }}
             >
               <Box
                 sx={{
@@ -125,7 +136,10 @@ const LineChartCard = () => {
                   borderRadius: "2px",
                 }}
               />
-              <Typography variant="body2">
+              <Typography
+                variant="body2"
+                sx={{ fontSize: { xs: "0.75rem", sm: "0.875rem" } }}
+              >
                 {entry.name}:{" "}
                 <b>
                   {entry.name === "Retention Rate"
@@ -145,14 +159,33 @@ const LineChartCard = () => {
     <StyledChartCard>
       <ChartHeader>
         <Box>
-          <Typography variant="h6" fontWeight={600}>
+          <Typography
+            variant="h6"
+            fontWeight={600}
+            sx={{
+              fontSize: { xs: "1.125rem", sm: "1.25rem", md: "1.5rem" },
+            }}
+          >
             User Analytics
           </Typography>
-          <Typography variant="body2" color="text.secondary">
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{
+              fontSize: { xs: "0.75rem", sm: "0.875rem" },
+            }}
+          >
             Monthly trends and metrics
           </Typography>
         </Box>
-        <Typography variant="body2" color="primary">
+        <Typography
+          variant="body2"
+          color="primary"
+          sx={{
+            fontSize: { xs: "0.75rem", sm: "0.875rem" },
+            fontWeight: 500,
+          }}
+        >
           Current Year
         </Typography>
       </ChartHeader>
@@ -162,10 +195,10 @@ const LineChartCard = () => {
           <LineChart
             data={data}
             margin={{
-              top: 5,
-              right: isMobile ? 0 : 20,
-              left: isMobile ? -20 : 0,
-              bottom: 5,
+              top: 10,
+              right: theme.breakpoints.down("sm") ? 10 : 20,
+              left: theme.breakpoints.down("sm") ? -10 : 0,
+              bottom: 10,
             }}
           >
             <CartesianGrid
@@ -175,53 +208,70 @@ const LineChartCard = () => {
             />
             <XAxis
               dataKey="name"
-              tick={{ fontSize: isMobile ? 11 : 12 }}
+              tick={{ fontSize: theme.breakpoints.down("sm") ? 10 : 12 }}
               tickMargin={10}
+              // interval={theme.breakpoints.down("sm") ? 0 : ("auto" as const)}
             />
             <YAxis
               yAxisId="left"
-              tick={{ fontSize: isMobile ? 11 : 12 }}
+              tick={{ fontSize: theme.breakpoints.down("sm") ? 10 : 12 }}
               tickFormatter={(value) => value.toLocaleString()}
+              width={theme.breakpoints.down("sm") ? 40 : 50}
             />
             <YAxis
               yAxisId="right"
               orientation="right"
               domain={[0, 100]}
-              tick={{ fontSize: isMobile ? 11 : 12 }}
+              tick={{ fontSize: theme.breakpoints.down("sm") ? 10 : 12 }}
               tickFormatter={(value) => `${value}%`}
+              width={theme.breakpoints.down("sm") ? 40 : 50}
             />
             <Tooltip content={<CustomTooltipContent />} />
             <Legend
+              layout="horizontal"
+              verticalAlign="bottom"
+              align="center"
               wrapperStyle={{
-                paddingTop: theme.spacing(2),
+                paddingTop: theme.spacing(theme.breakpoints.down("sm") ? 1 : 2),
+                fontSize: theme.breakpoints.down("sm") ? "0.75rem" : "0.875rem",
               }}
+              formatter={(value) => (
+                <Typography
+                  component="span"
+                  variant="body2"
+                  color="text.secondary"
+                  sx={{ fontSize: { xs: "0.75rem", sm: "0.875rem" } }}
+                >
+                  {value}
+                </Typography>
+              )}
             />
             <Line
               yAxisId="left"
               dataKey="users"
               name="Active Users"
               stroke={theme.palette.primary.main}
-              strokeWidth={2}
-              dot={{ r: isMobile ? 3 : 4 }}
-              activeDot={{ r: isMobile ? 5 : 6 }}
+              strokeWidth={theme.breakpoints.down("sm") ? 1.5 : 2}
+              dot={{ r: theme.breakpoints.down("sm") ? 2 : 4 }}
+              activeDot={{ r: theme.breakpoints.down("sm") ? 4 : 6 }}
             />
             <Line
               yAxisId="left"
               dataKey="sessions"
               name="Sessions"
               stroke={theme.palette.secondary.main}
-              strokeWidth={2}
-              dot={{ r: isMobile ? 3 : 4 }}
-              activeDot={{ r: isMobile ? 5 : 6 }}
+              strokeWidth={theme.breakpoints.down("sm") ? 1.5 : 2}
+              dot={{ r: theme.breakpoints.down("sm") ? 2 : 4 }}
+              activeDot={{ r: theme.breakpoints.down("sm") ? 4 : 6 }}
             />
             <Line
               yAxisId="right"
               dataKey="retention"
               name="Retention Rate"
               stroke={theme.palette.success.main}
-              strokeWidth={2}
-              dot={{ r: isMobile ? 3 : 4 }}
-              activeDot={{ r: isMobile ? 5 : 6 }}
+              strokeWidth={theme.breakpoints.down("sm") ? 1.5 : 2}
+              dot={{ r: theme.breakpoints.down("sm") ? 2 : 4 }}
+              activeDot={{ r: theme.breakpoints.down("sm") ? 4 : 6 }}
             />
           </LineChart>
         </ResponsiveContainer>

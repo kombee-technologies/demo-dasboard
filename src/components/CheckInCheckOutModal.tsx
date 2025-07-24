@@ -148,7 +148,8 @@ const ClockIconButton = styled(IconButton)(({ theme }) => ({
     theme.palette.primary.main,
     0.1
   )} 0%, ${alpha(theme.palette.secondary.main, 0.1)} 100%)`,
-  padding: theme.spacing(1.5),
+  padding: theme.spacing(1),
+  margin: theme.spacing(1.5),
   transition: "all 0.3s ease",
   "&:hover": {
     transform: "rotate(15deg) scale(1.1)",
