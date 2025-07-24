@@ -431,16 +431,20 @@ const EmployeeTable: React.FC = () => {
               transition: "all 0.3s ease",
               "&:hover": {
                 background: theme.palette.action.hover,
-                transform: "translateY(-2px)",
-                boxShadow: theme.shadows[1],
+                transform: "translateY(-1px)",
+                boxShadow: theme.shadows[3],
               },
             },
             "& .MuiDataGrid-footerContainer": {
-              background: theme.palette.grey[50],
-              borderTop: `1px solid ${theme.palette.grey[200]}`,
+              background: `linear-gradient(180deg, ${theme.palette.grey[100]} 0%, ${theme.palette.grey[200]} 100%)`,
+              borderTop: `2px solid ${theme.palette.divider}`,
+              "& .MuiDataGrid-pagination": {
+                color: theme.palette.text.secondary,
+                fontSize: isMobile ? "0.85rem" : "0.9rem",
+              },
             },
             "& .MuiDataGrid-toolbarContainer": {
-              padding: theme.spacing(2),
+              padding: theme.spacing(3),
             },
             [theme.breakpoints.down("sm")]: {
               "& .MuiDataGrid-cell": {

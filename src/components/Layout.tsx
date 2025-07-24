@@ -487,19 +487,19 @@ const Layout: React.FC<LayoutProps> = () => {
                   overflow: "visible",
                   filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
                   mt: 0.5,
-                  width: 220, 
-                  borderRadius: 8, 
-                  transition: "all 0.3s ease-in-out", 
+                  width: 220,
+                  borderRadius: 8,
+                  transition: "all 0.3s ease-in-out",
                   "& .MuiMenuItem-root": {
-                    padding: theme.spacing(1.5, 2), 
+                    padding: theme.spacing(1.5, 2),
                     borderRadius: 6,
-                    margin: theme.spacing(0.5, 1), 
+                    margin: theme.spacing(0.5, 1),
                     transition:
                       "background-color 0.2s ease-in-out, transform 0.2s ease-in-out",
                     "&:hover": {
                       background:
                         theme.palette.mode === "light" ? "#f0cdee" : "#770aa5",
-                      transform: "translateX(2px)", 
+                      transform: "translateX(2px)",
                     },
                   },
                   "& .MuiAvatar-root": {
@@ -519,7 +519,7 @@ const Layout: React.FC<LayoutProps> = () => {
                     bgcolor: "background.paper",
                     transform: "translateY(-50%) rotate(45deg)",
                     zIndex: 0,
-                    transition: "all 0.3s ease-in-out", 
+                    transition: "all 0.3s ease-in-out",
                   },
                 },
               }}
