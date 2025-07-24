@@ -10,10 +10,13 @@ import {
   useTheme,
   useMediaQuery,
   IconButton,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemSecondaryAction,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import AddIcon from "@mui/icons-material/Add";
@@ -111,6 +114,20 @@ const CancelButton = styled(StyledButton)(({ theme }) => ({
     boxShadow: theme.shadows[6],
   },
 }));
+
+const StyledTableContainer = styled(TableContainer)(({ theme }) => ({
+  marginTop: theme.spacing(2),
+  borderRadius: theme.shape.borderRadius,
+  boxShadow: theme.shadows[2],
+  "& .MuiTableCell-root": {
+    borderBottom: `1px solid ${theme.palette.grey[100]}`,
+  },
+  "& .MuiTableRow-root:hover": {
+    background: theme.palette.action.hover,
+    transform: "translateY(-2px)",
+    transition: "all 0.3s ease",
+  },
+})) as typeof TableContainer;
 
 // Interface for settings data
 interface SettingsData {
@@ -442,35 +459,8 @@ const Settings: React.FC = () => {
             <Typography variant="h6" fontWeight={600} sx={{ mb: 2 }}>
               Attendance Statuses
             </Typography>
-            <List>
-              {settings.attendanceStatuses.map((status) => (
-                <ListItem
-                  key={status}
-                  sx={{
-                    borderBottom: `1px solid ${theme.palette.grey[100]}`,
-                    "&:hover": {
-                      background: theme.palette.action.hover,
-                      transform: "translateY(-2px)",
-                      boxShadow: theme.shadows[1],
-                    },
-                    transition: "all 0.3s ease",
-                  }}
-                >
-                  <ListItemText primary={status} />
-                  <ListItemSecondaryAction>
-                    <IconButton
-                      edge="end"
-                      aria-label="delete"
-                      onClick={() => handleDeleteAttendanceStatus(status)}
-                    >
-                      <DeleteIcon color="error" />
-                    </IconButton>
-                  </ListItemSecondaryAction>
-                </ListItem>
-              ))}
-            </List>
             <Box
-              sx={{ display: "flex", gap: 2, mt: 2, alignItems: "flex-start" }}
+              sx={{ display: "flex", gap: 2, mb: 2, alignItems: "flex-start" }}
             >
               <StyledTextField
                 label="New Status"
@@ -489,6 +479,31 @@ const Settings: React.FC = () => {
                 Add
               </StyledButton>
             </Box>
+            <StyledTableContainer component={Paper}>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Status</TableCell>
+                    <TableCell align="right">Action</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {settings.attendanceStatuses.map((status) => (
+                    <TableRow key={status}>
+                      <TableCell>{status}</TableCell>
+                      <TableCell align="right">
+                        <IconButton
+                          aria-label="delete"
+                          onClick={() => handleDeleteAttendanceStatus(status)}
+                        >
+                          <DeleteIcon color="error" />
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </StyledTableContainer>
           </Box>
         )}
         {tabValue === 2 && (
@@ -496,35 +511,8 @@ const Settings: React.FC = () => {
             <Typography variant="h6" fontWeight={600} sx={{ mb: 2 }}>
               Payroll Statuses
             </Typography>
-            <List>
-              {settings.payrollStatuses.map((status) => (
-                <ListItem
-                  key={status}
-                  sx={{
-                    borderBottom: `1px solid ${theme.palette.grey[100]}`,
-                    "&:hover": {
-                      background: theme.palette.action.hover,
-                      transform: "translateY(-2px)",
-                      boxShadow: theme.shadows[1],
-                    },
-                    transition: "all 0.3s ease",
-                  }}
-                >
-                  <ListItemText primary={status} />
-                  <ListItemSecondaryAction>
-                    <IconButton
-                      edge="end"
-                      aria-label="delete"
-                      onClick={() => handleDeletePayrollStatus(status)}
-                    >
-                      <DeleteIcon color="error" />
-                    </IconButton>
-                  </ListItemSecondaryAction>
-                </ListItem>
-              ))}
-            </List>
             <Box
-              sx={{ display: "flex", gap: 2, mt: 2, alignItems: "flex-start" }}
+              sx={{ display: "flex", gap: 2, mb: 2, alignItems: "flex-start" }}
             >
               <StyledTextField
                 label="New Status"
@@ -543,6 +531,31 @@ const Settings: React.FC = () => {
                 Add
               </StyledButton>
             </Box>
+            <StyledTableContainer component={Paper}>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Status</TableCell>
+                    <TableCell align="right">Action</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {settings.payrollStatuses.map((status) => (
+                    <TableRow key={status}>
+                      <TableCell>{status}</TableCell>
+                      <TableCell align="right">
+                        <IconButton
+                          aria-label="delete"
+                          onClick={() => handleDeletePayrollStatus(status)}
+                        >
+                          <DeleteIcon color="error" />
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </StyledTableContainer>
           </Box>
         )}
         {tabValue === 3 && (
@@ -550,35 +563,8 @@ const Settings: React.FC = () => {
             <Typography variant="h6" fontWeight={600} sx={{ mb: 2 }}>
               Recruitment Statuses
             </Typography>
-            <List>
-              {settings.recruitmentStatuses.map((status) => (
-                <ListItem
-                  key={status}
-                  sx={{
-                    borderBottom: `1px solid ${theme.palette.grey[100]}`,
-                    "&:hover": {
-                      background: theme.palette.action.hover,
-                      transform: "translateY(-2px)",
-                      boxShadow: theme.shadows[1],
-                    },
-                    transition: "all 0.3s ease",
-                  }}
-                >
-                  <ListItemText primary={status} />
-                  <ListItemSecondaryAction>
-                    <IconButton
-                      edge="end"
-                      aria-label="delete"
-                      onClick={() => handleDeleteRecruitmentStatus(status)}
-                    >
-                      <DeleteIcon color="error" />
-                    </IconButton>
-                  </ListItemSecondaryAction>
-                </ListItem>
-              ))}
-            </List>
             <Box
-              sx={{ display: "flex", gap: 2, mt: 2, alignItems: "flex-start" }}
+              sx={{ display: "flex", gap: 2, mb: 2, alignItems: "flex-start" }}
             >
               <StyledTextField
                 label="New Status"
@@ -597,6 +583,31 @@ const Settings: React.FC = () => {
                 Add
               </StyledButton>
             </Box>
+            <StyledTableContainer component={Paper}>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Status</TableCell>
+                    <TableCell align="right">Action</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {settings.recruitmentStatuses.map((status) => (
+                    <TableRow key={status}>
+                      <TableCell>{status}</TableCell>
+                      <TableCell align="right">
+                        <IconButton
+                          aria-label="delete"
+                          onClick={() => handleDeleteRecruitmentStatus(status)}
+                        >
+                          <DeleteIcon color="error" />
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </StyledTableContainer>
           </Box>
         )}
         {tabValue === 4 && (
@@ -604,35 +615,8 @@ const Settings: React.FC = () => {
             <Typography variant="h6" fontWeight={600} sx={{ mb: 2 }}>
               Leave Types
             </Typography>
-            <List>
-              {settings.leaveTypes.map((type) => (
-                <ListItem
-                  key={type}
-                  sx={{
-                    borderBottom: `1px solid ${theme.palette.grey[100]}`,
-                    "&:hover": {
-                      background: theme.palette.action.hover,
-                      transform: "translateY(-2px)",
-                      boxShadow: theme.shadows[1],
-                    },
-                    transition: "all 0.3s ease",
-                  }}
-                >
-                  <ListItemText primary={type} />
-                  <ListItemSecondaryAction>
-                    <IconButton
-                      edge="end"
-                      aria-label="delete"
-                      onClick={() => handleDeleteLeaveType(type)}
-                    >
-                      <DeleteIcon color="error" />
-                    </IconButton>
-                  </ListItemSecondaryAction>
-                </ListItem>
-              ))}
-            </List>
             <Box
-              sx={{ display: "flex", gap: 2, mt: 2, alignItems: "flex-start" }}
+              sx={{ display: "flex", gap: 2, mb: 2, alignItems: "flex-start" }}
             >
               <StyledTextField
                 label="New Leave Type"
@@ -651,38 +635,36 @@ const Settings: React.FC = () => {
                 Add
               </StyledButton>
             </Box>
+            <StyledTableContainer component={Paper}>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Type</TableCell>
+                    <TableCell align="right">Action</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {settings.leaveTypes.map((type) => (
+                    <TableRow key={type}>
+                      <TableCell>{type}</TableCell>
+                      <TableCell align="right">
+                        <IconButton
+                          aria-label="delete"
+                          onClick={() => handleDeleteLeaveType(type)}
+                        >
+                          <DeleteIcon color="error" />
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </StyledTableContainer>
             <Typography variant="h6" fontWeight={600} sx={{ mt: 4, mb: 2 }}>
               Leave Statuses
             </Typography>
-            <List>
-              {settings.leaveStatuses.map((status) => (
-                <ListItem
-                  key={status}
-                  sx={{
-                    borderBottom: `1px solid ${theme.palette.grey[100]}`,
-                    "&:hover": {
-                      background: theme.palette.action.hover,
-                      transform: "translateY(-2px)",
-                      boxShadow: theme.shadows[1],
-                    },
-                    transition: "all 0.3s ease",
-                  }}
-                >
-                  <ListItemText primary={status} />
-                  <ListItemSecondaryAction>
-                    <IconButton
-                      edge="end"
-                      aria-label="delete"
-                      onClick={() => handleDeleteLeaveStatus(status)}
-                    >
-                      <DeleteIcon color="error" />
-                    </IconButton>
-                  </ListItemSecondaryAction>
-                </ListItem>
-              ))}
-            </List>
             <Box
-              sx={{ display: "flex", gap: 2, mt: 2, alignItems: "flex-start" }}
+              sx={{ display: "flex", gap: 2, mb: 2, alignItems: "flex-start" }}
             >
               <StyledTextField
                 label="New Status"
@@ -701,6 +683,31 @@ const Settings: React.FC = () => {
                 Add
               </StyledButton>
             </Box>
+            <StyledTableContainer component={Paper}>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Status</TableCell>
+                    <TableCell align="right">Action</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {settings.leaveStatuses.map((status) => (
+                    <TableRow key={status}>
+                      <TableCell>{status}</TableCell>
+                      <TableCell align="right">
+                        <IconButton
+                          aria-label="delete"
+                          onClick={() => handleDeleteLeaveStatus(status)}
+                        >
+                          <DeleteIcon color="error" />
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </StyledTableContainer>
           </Box>
         )}
       </Box>
