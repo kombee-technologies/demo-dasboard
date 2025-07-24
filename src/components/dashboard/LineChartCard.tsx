@@ -23,8 +23,12 @@ const StyledChartCard = styled(Box)(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
   "&:hover": {
-    transform: "translateY(-4px)",
-    boxShadow: theme.shadows[5],
+    transform: "translateY(-6px)",
+    boxShadow: theme.shadows[6],
+    backgroundColor:
+      theme.palette.mode === "dark"
+        ? theme.palette.grey[800]
+        : theme.palette.grey[50],
   },
   [theme.breakpoints.down("sm")]: {
     padding: theme.spacing(1.5, 2),
