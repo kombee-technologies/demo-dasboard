@@ -19,6 +19,8 @@ import {
   Tooltip,
   Badge,
   useMediaQuery,
+  Menu,
+  MenuItem,
 } from "@mui/material";
 import {
   Menu as MenuIcon,
@@ -35,10 +37,11 @@ import {
   AttachMoney as PayrollIcon,
   Work as RecruitmentIcon,
   CalendarToday as LeaveIcon,
+  Logout as LogoutIcon,
 } from "@mui/icons-material";
 import { NavLink, useLocation, Outlet } from "react-router-dom";
 
-import CheckInCheckOutModal from './CheckInCheckOutModal';
+import AttendanceTrackerModal from "./AttendanceTrackerModal";
 
 import LogoDark from "../images/svg/logo-dark.svg";
 import LogoLight from "../images/svg/logo-light.svg";
@@ -202,12 +205,12 @@ const NavLinkStyled = styled(NavLink)(({ theme }) => ({
       fontWeight: theme.typography.fontWeightMedium,
     },
     "&:hover": {
-      background: "#9c06c9", 
+      background: "#9c06c9",
       transform: "translateX(2px)",
     },
   },
   "&:hover": {
-    background: theme.palette.mode === "light" ? "#f0cdee" : "#770aa5", 
+    background: theme.palette.mode === "light" ? "#f0cdee" : "#770aa5",
     transform: "translateX(2px)",
   },
 }));
@@ -271,6 +274,7 @@ const Layout: React.FC<LayoutProps> = () => {
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const [open, setOpen] = React.useState<boolean>(!isMobile);
   const location = useLocation();
+  const isMenuOpen = Boolean(anchorEl);
 
   const handleDrawerToggle = () => {
     setOpen(!open);
@@ -284,8 +288,18 @@ const Layout: React.FC<LayoutProps> = () => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleProfileMenuClose = () => {
+  const handleMenuClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleLogout = () => {
+    console.log("User logged out");
+    handleMenuClose();
+  };
+
+  const handleProfile = () => {
+    console.log("Navigate to profile");
+    handleMenuClose();
   };
 
   const getPageTitle = () => {
@@ -354,13 +368,11 @@ const Layout: React.FC<LayoutProps> = () => {
   );
 
   const handleCheckIn = () => {
-    console.log('Check-in recorded at:', new Date().toLocaleString());
-    // Add your check-in logic here
+    console.log("Check-in recorded at:", new Date().toLocaleString());
   };
 
   const handleCheckOut = () => {
-    console.log('Check-out recorded at:', new Date().toLocaleString());
-    // Add your check-out logic here
+    console.log("Check-out recorded at:", new Date().toLocaleString());
   };
 
   return (
@@ -409,7 +421,10 @@ const Layout: React.FC<LayoutProps> = () => {
               {getPageTitle()}
             </Typography>
 
-            <CheckInCheckOutModal onCheckIn={handleCheckIn} onCheckOut={handleCheckOut} />
+            <AttendanceTrackerModal
+              onCheckIn={handleCheckIn}
+              onCheckOut={handleCheckOut}
+            />
 
             <Tooltip title="Notifications">
               <IconButton
@@ -452,6 +467,88 @@ const Layout: React.FC<LayoutProps> = () => {
                 <AccountCircleIcon />
               </UserProfileButton>
             </Tooltip>
+            <Menu
+              anchorEl={anchorEl}
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "right",
+              }}
+              id="account-menu"
+              keepMounted
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}
+              open={isMenuOpen}
+              onClose={handleMenuClose}
+              PaperProps={{
+                elevation: 0,
+                sx: {
+                  overflow: "visible",
+                  filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+                  mt: 0.5,
+                  width: 220, 
+                  borderRadius: 8, 
+                  transition: "all 0.3s ease-in-out", 
+                  "& .MuiMenuItem-root": {
+                    padding: theme.spacing(1.5, 2), 
+                    borderRadius: 6,
+                    margin: theme.spacing(0.5, 1), 
+                    transition:
+                      "background-color 0.2s ease-in-out, transform 0.2s ease-in-out",
+                    "&:hover": {
+                      background:
+                        theme.palette.mode === "light" ? "#f0cdee" : "#770aa5",
+                      transform: "translateX(2px)", 
+                    },
+                  },
+                  "& .MuiAvatar-root": {
+                    width: 32,
+                    height: 32,
+                    ml: -0.5,
+                    mr: 1,
+                  },
+                  "&:before": {
+                    content: '""',
+                    display: "block",
+                    position: "absolute",
+                    top: -5,
+                    right: 14,
+                    width: 10,
+                    height: 10,
+                    bgcolor: "background.paper",
+                    transform: "translateY(-50%) rotate(45deg)",
+                    zIndex: 0,
+                    transition: "all 0.3s ease-in-out", 
+                  },
+                },
+              }}
+            >
+              <MenuItem
+                disabled
+                sx={{
+                  justifyContent: "center",
+                  padding: theme.spacing(1.5, 2),
+                }}
+              >
+                <Typography variant="subtitle1" fontWeight="bold">
+                  John Doe
+                </Typography>
+              </MenuItem>
+              <Divider sx={{ my: 0.5 }} />
+              <MenuItem onClick={handleProfile}>
+                <ListItemIcon>
+                  <AccountCircleIcon fontSize="small" />
+                </ListItemIcon>
+                Profile
+              </MenuItem>
+              <MenuItem onClick={handleLogout}>
+                <ListItemIcon>
+                  <LogoutIcon fontSize="small" />
+                </ListItemIcon>
+                Logout
+              </MenuItem>
+            </Menu>
           </Toolbar>
         </AppBarStyled>
 

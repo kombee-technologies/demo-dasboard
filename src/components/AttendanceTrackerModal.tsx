@@ -28,7 +28,7 @@ const ModalBackdrop = styled(Box)(({ theme }) => ({
   left: 0,
   right: 0,
   bottom: 0,
-  backgroundColor: alpha(theme.palette.common.black, 0.5),
+  backgroundColor: alpha(theme.palette.common.black, 0.6), 
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
@@ -37,31 +37,39 @@ const ModalBackdrop = styled(Box)(({ theme }) => ({
 
 const ModalContainer = styled(Box)(({ theme }) => ({
   width: "90%",
-  maxWidth: 450,
+  maxWidth: 480, 
   background: theme.palette.background.paper,
-  borderRadius: 2,
-  boxShadow: theme.shadows[10],
+  borderRadius: 10, 
+  boxShadow: theme.shadows[10], 
   padding: theme.spacing(4),
   display: "flex",
   flexDirection: "column",
   gap: theme.spacing(3),
-  border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
-  position: "relative", // Added for positioning the close button
+  border: `1px solid ${alpha(theme.palette.divider, 0.15)}`,
+  position: "relative",
   [theme.breakpoints.down("sm")]: {
     width: "95%",
-    maxWidth: "calc(100% - 32px)",
+    maxWidth: "calc(100% - 24px)",
     padding: theme.spacing(3),
+    borderRadius: 8,
   },
 }));
 
 const CloseButton = styled(IconButton)(({ theme }) => ({
   position: "absolute",
-  top: theme.spacing(1),
-  right: theme.spacing(1),
-  color: theme.palette.grey[500],
+  top: theme.spacing(1.5),
+  right: theme.spacing(1.5),
+  color: theme.palette.grey[600],
+  background: alpha(theme.palette.grey[200], 0.3),
   "&:hover": {
-    color: theme.palette.grey[700],
-    backgroundColor: alpha(theme.palette.grey[500], 0.1),
+    color: theme.palette.grey[800],
+    background: alpha(theme.palette.grey[500], 0.2),
+    transform: "rotate(90deg)", 
+  },
+  transition: "all 0.2s ease-in-out",
+  [theme.breakpoints.down("sm")]: {
+    top: theme.spacing(1),
+    right: theme.spacing(1),
   },
 }));
 
@@ -72,31 +80,40 @@ const TimerDisplay = styled(Box)(({ theme }) => ({
   color: theme.palette.text.primary,
   background: `linear-gradient(135deg, ${alpha(
     theme.palette.primary.main,
-    0.1
-  )} 0%, ${alpha(theme.palette.secondary.main, 0.1)} 100%)`,
+    0.15
+  )} 0%, ${alpha(theme.palette.secondary.main, 0.15)} 100%)`,
   padding: theme.spacing(3),
-  borderRadius: 2,
-  boxShadow: theme.shadows[1],
-  transition: "all 0.3s ease",
+  borderRadius: 8,
+  border: `1px solid ${alpha(theme.palette.divider, 0.1)}`, 
+  boxShadow: theme.shadows[3],
+  transition: "all 0.3s ease-in-out",
   "&:hover": {
-    transform: "translateY(-2px)",
-    boxShadow: theme.shadows[4],
+    transform: "scale(1.02)", 
+    boxShadow: theme.shadows[6],
   },
   [theme.breakpoints.down("sm")]: {
     fontSize: "1.5rem",
     padding: theme.spacing(2),
+    borderRadius: 6,
   },
 }));
 
 const StatusContainer = styled(Box)(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
-  gap: theme.spacing(1),
-  padding: theme.spacing(2),
-  background: alpha(theme.palette.grey[100], 0.5),
-  borderRadius: theme.shape.borderRadius,
+  gap: theme.spacing(1.5),
+  padding: theme.spacing(2.5),
+  background: alpha(theme.palette.grey[100], 0.7), 
+  borderRadius: 8, 
+  border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+  boxShadow: theme.shadows[2],
+  transition: "all 0.3s ease-in-out",
+  "&:hover": {
+    boxShadow: theme.shadows[4],
+  },
   [theme.breakpoints.down("sm")]: {
-    padding: theme.spacing(1.5),
+    padding: theme.spacing(2),
+    borderRadius: 6,
   },
 }));
 
@@ -106,28 +123,40 @@ const StatusTypography = styled(Typography)(({ theme }) => ({
   alignItems: "center",
   gap: theme.spacing(1),
   color: theme.palette.text.secondary,
+  fontWeight: 500,
   "& svg": {
-    fontSize: "1.1rem",
+    fontSize: "1.2rem",
   },
   [theme.breakpoints.down("sm")]: {
     fontSize: "0.85rem",
+    "& svg": {
+      fontSize: "1.1rem",
+    },
   },
 }));
 
 const ActionButton = styled(Button)(({ theme }) => ({
-  padding: theme.spacing(1.75),
+  padding: theme.spacing(1.5, 2),
   fontSize: "1rem",
   fontWeight: 600,
-  borderRadius: 2,
+  borderRadius: 8, 
   textTransform: "none",
   letterSpacing: "0.5px",
-  transition: "all 0.3s ease",
+  transition: "all 0.3s ease-in-out",
   "&:hover": {
-    transform: "translateY(-2px)",
-    boxShadow: theme.shadows[2],
+    transform: "translateY(-2px) scale(1.02)", 
+    boxShadow: theme.shadows[4],
+    background: `linear-gradient(135deg, ${alpha(
+      theme.palette.primary.main,
+      0.9
+    )} 0%, ${alpha(theme.palette.secondary.main, 0.9)} 100%)`, 
+  },
+  "&:disabled": {
+    opacity: 0.6,
+    transform: "none",
   },
   [theme.breakpoints.down("sm")]: {
-    padding: theme.spacing(1.25),
+    padding: theme.spacing(1, 1.5),
     fontSize: "0.9rem",
   },
 }));
@@ -136,7 +165,7 @@ const ButtonContainer = styled(Box)(({ theme }) => ({
   display: "flex",
   gap: theme.spacing(2),
   justifyContent: "center",
-  marginTop: theme.spacing(1),
+  marginTop: theme.spacing(2),
   [theme.breakpoints.down("sm")]: {
     flexDirection: "column",
     gap: theme.spacing(1.5),
@@ -146,27 +175,32 @@ const ButtonContainer = styled(Box)(({ theme }) => ({
 const ClockIconButton = styled(IconButton)(({ theme }) => ({
   background: `linear-gradient(135deg, ${alpha(
     theme.palette.primary.main,
-    0.1
-  )} 0%, ${alpha(theme.palette.secondary.main, 0.1)} 100%)`,
+    0.2
+  )} 0%, ${alpha(theme.palette.secondary.main, 0.2)} 100%)`,
   padding: theme.spacing(1),
   margin: theme.spacing(1.5),
-  transition: "all 0.3s ease",
+  borderRadius: 8,
+  transition: "all 0.3s ease-in-out",
   "&:hover": {
     transform: "rotate(15deg) scale(1.1)",
-    background: alpha(theme.palette.primary.main, 0.2),
-    boxShadow: theme.shadows[2],
+    background: `linear-gradient(135deg, ${alpha(
+      theme.palette.primary.main,
+      0.3
+    )} 0%, ${alpha(theme.palette.secondary.main, 0.3)} 100%)`,
+    boxShadow: theme.shadows[4],
   },
   [theme.breakpoints.down("sm")]: {
     padding: theme.spacing(1),
+    margin: theme.spacing(1),
   },
 }));
 
-interface CheckInCheckOutModalProps {
+interface AttendanceTrackerModalProps {
   onCheckIn: (startTime: string) => void;
   onCheckOut: (startTime: string, endTime: string, totalTime: string) => void;
 }
 
-const CheckInCheckOutModal: React.FC<CheckInCheckOutModalProps> = ({
+const AttendanceTrackerModal: React.FC<AttendanceTrackerModalProps> = ({
   onCheckIn,
   onCheckOut,
 }) => {
@@ -226,7 +260,7 @@ const CheckInCheckOutModal: React.FC<CheckInCheckOutModalProps> = ({
           <ClockIconButton
             onClick={handleOpen}
             color="primary"
-            size={isMobile ? "medium" : "large"}
+            size={isMobile ? "medium" : "small"}
           >
             <ClockIcon fontSize={isMobile ? "medium" : "small"} />
           </ClockIconButton>
@@ -244,9 +278,8 @@ const CheckInCheckOutModal: React.FC<CheckInCheckOutModalProps> = ({
       >
         <Fade in={open}>
           <ModalBackdrop>
-            <Slide in={open} direction="up" timeout={300}>
+            <Slide in={open} direction="up" timeout={400}>
               <ModalContainer>
-                {/* Close button added here */}
                 <CloseButton
                   aria-label="close"
                   onClick={handleClose}
@@ -262,8 +295,9 @@ const CheckInCheckOutModal: React.FC<CheckInCheckOutModalProps> = ({
                   sx={{
                     fontWeight: 700,
                     color: theme.palette.primary.main,
-                    mb: 1,
-                    pr: 4, // Add padding to prevent text overlap with close button
+                    mb: 2,
+                    pr: 5,
+                    letterSpacing: 0.3,
                   }}
                 >
                   Attendance Tracker
@@ -327,4 +361,4 @@ const CheckInCheckOutModal: React.FC<CheckInCheckOutModalProps> = ({
   );
 };
 
-export default CheckInCheckOutModal;
+export default AttendanceTrackerModal;
