@@ -110,10 +110,28 @@ const getTheme = (mode: "light" | "dark") =>
           },
         },
       },
+      MuiListItemIcon: {
+        styleOverrides: {
+          root: {
+            transition: "transform 0.3s ease-in-out, opacity 0.3s ease-in-out",
+            animation: `$fadeIn 0.5s ease-in-out`,
+            "@keyframes fadeIn": {
+              "0%": {
+                opacity: 0,
+                transform: "scale(0.8)",
+              },
+              "100%": {
+                opacity: 1,
+                transform: "scale(1)",
+              },
+            },
+          },
+        },
+      },
     },
   });
 
-// Styled Components with responsive adjustments
+// Styled Components with responsive adjustments and animations
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
   open?: boolean;
 }>(({ theme, open }) => ({
@@ -200,6 +218,7 @@ const NavLinkStyled = styled(NavLink)(({ theme }) => ({
     color: theme.palette.primary.contrastText,
     "& .MuiListItemIcon-root": {
       color: theme.palette.primary.contrastText,
+      transform: "scale(1.1)",
     },
     "& .MuiListItemText-primary": {
       fontWeight: theme.typography.fontWeightMedium,
@@ -207,11 +226,17 @@ const NavLinkStyled = styled(NavLink)(({ theme }) => ({
     "&:hover": {
       background: "#9c06c9",
       transform: "translateX(2px)",
+      "& .MuiListItemIcon-root": {
+        transform: "scale(1.15)",
+      },
     },
   },
   "&:hover": {
     background: theme.palette.mode === "light" ? "#f0cdee" : "#770aa5",
     transform: "translateX(2px)",
+    "& .MuiListItemIcon-root": {
+      transform: "scale(1.1)",
+    },
   },
 }));
 
@@ -234,12 +259,24 @@ const UserProfileButton = styled(IconButton)(({ theme }) => ({
   marginLeft: theme.spacing(1),
   border: `1px solid ${alpha(theme.palette.divider, 0.2)}`,
   background: alpha(theme.palette.primary.main, 0.05),
+  transition: "transform 0.3s ease-in-out, background 0.2s ease-in-out",
+  animation: `$fadeIn 0.5s ease-in-out`,
   "&:hover": {
     background: alpha(theme.palette.primary.main, 0.15),
-    transform: "scale(1.05)",
+    transform: "scale(1.1)",
   },
   "@media (max-width: 600px)": {
     padding: theme.spacing(0.5),
+  },
+  "@keyframes fadeIn": {
+    "0%": {
+      opacity: 0,
+      transform: "scale(0.8)",
+    },
+    "100%": {
+      opacity: 1,
+      transform: "scale(1)",
+    },
   },
 }));
 
@@ -256,12 +293,67 @@ const ThemeToggleContainer = styled(Box)(({ theme }) => ({
 
 const ThemeToggleButton = styled(IconButton)(({ theme }) => ({
   color: theme.palette.text.primary,
+  transition: "transform 0.3s ease-in-out, background 0.2s ease-in-out",
+  animation: `$fadeIn 0.5s ease-in-out`,
   "&:hover": {
     background: alpha(theme.palette.primary.main, 0.15),
-    transform: "scale(1.05)",
+    transform: "scale(1.1)",
   },
   "@media (max-width: 600px)": {
     padding: theme.spacing(0.5),
+  },
+  "@keyframes fadeIn": {
+    "0%": {
+      opacity: 0,
+      transform: "scale(0.8)",
+    },
+    "100%": {
+      opacity: 1,
+      transform: "scale(1)",
+    },
+  },
+}));
+
+const NotificationButton = styled(IconButton)(({ theme }) => ({
+  color: theme.palette.text.primary,
+  transition: "transform 0.3s ease-in-out, background 0.2s ease-in-out",
+  animation: `$fadeIn 0.5s ease-in-out`,
+  "&:hover": {
+    background: alpha(theme.palette.primary.main, 0.15),
+    transform: "scale(1.1)",
+  },
+  "@media (max-width: 600px)": {
+    padding: theme.spacing(0.5),
+  },
+  "@keyframes fadeIn": {
+    "0%": {
+      opacity: 0,
+      transform: "scale(0.8)",
+    },
+    "100%": {
+      opacity: 1,
+      transform: "scale(1)",
+    },
+  },
+}));
+
+const DrawerToggleButton = styled(IconButton)(({ theme }) => ({
+  color: theme.palette.text.primary,
+  transition: "transform 0.3s ease-in-out, background 0.2s ease-in-out",
+  animation: `$fadeIn 0.5s ease-in-out`,
+  "&:hover": {
+    background: alpha(theme.palette.primary.main, 0.1),
+    transform: "scale(1.1)",
+  },
+  "@keyframes fadeIn": {
+    "0%": {
+      opacity: 0,
+      transform: "scale(0.8)",
+    },
+    "100%": {
+      opacity: 1,
+      transform: "scale(1)",
+    },
   },
 }));
 
@@ -331,16 +423,13 @@ const Layout: React.FC<LayoutProps> = () => {
           }}
         />
         <Tooltip title={open ? "Close Drawer" : "Open Drawer"}>
-          <IconButton
-            onClick={handleDrawerToggle}
-            sx={{ color: theme.palette.text.primary }}
-          >
+          <DrawerToggleButton onClick={handleDrawerToggle}>
             {theme.direction === "ltr" ? (
               <ChevronLeftIcon />
             ) : (
               <ChevronRightIcon />
             )}
-          </IconButton>
+          </DrawerToggleButton>
         </Tooltip>
       </DrawerHeader>
       <Divider />
@@ -390,21 +479,16 @@ const Layout: React.FC<LayoutProps> = () => {
           <Toolbar sx={{ minHeight: isSmallScreen ? "56px" : "72px" }}>
             {!open && (
               <Tooltip title="Open Drawer">
-                <IconButton
+                <DrawerToggleButton
                   color="inherit"
                   edge="start"
                   onClick={handleDrawerToggle}
                   sx={{
                     mr: 1,
-                    color: theme.palette.text.primary,
-                    "&:hover": {
-                      background: alpha(theme.palette.primary.main, 0.1),
-                      transform: "scale(1.05)",
-                    },
                   }}
                 >
                   <MenuIcon />
-                </IconButton>
+                </DrawerToggleButton>
               </Tooltip>
             )}
             <Typography
@@ -427,20 +511,16 @@ const Layout: React.FC<LayoutProps> = () => {
             />
 
             <Tooltip title="Notifications">
-              <IconButton
+              <NotificationButton
                 color="inherit"
                 sx={{
                   mr: 0.5,
-                  "&:hover": {
-                    background: alpha(theme.palette.primary.main, 0.1),
-                    transform: "scale(1.05)",
-                  },
                 }}
               >
                 <Badge badgeContent={notificationCount} color="error">
                   <NotificationsIcon />
                 </Badge>
-              </IconButton>
+              </NotificationButton>
             </Tooltip>
 
             <ThemeToggleContainer>
@@ -500,6 +580,24 @@ const Layout: React.FC<LayoutProps> = () => {
                       background:
                         theme.palette.mode === "light" ? "#f0cdee" : "#770aa5",
                       transform: "translateX(2px)",
+                      "& .MuiListItemIcon-root": {
+                        transform: "scale(1.1)",
+                      },
+                    },
+                  },
+                  "& .MuiListItemIcon-root": {
+                    transition:
+                      "transform 0.3s ease-in-out, opacity 0.3s ease-in-out",
+                    animation: `$fadeIn 0.5s ease-in-out`,
+                    "@keyframes fadeIn": {
+                      "0%": {
+                        opacity: 0,
+                        transform: "scale(0.8)",
+                      },
+                      "100%": {
+                        opacity: 1,
+                        transform: "scale(1)",
+                      },
                     },
                   },
                   "& .MuiAvatar-root": {
