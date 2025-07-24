@@ -38,6 +38,8 @@ import {
 } from "@mui/icons-material";
 import { NavLink, useLocation, Outlet } from "react-router-dom";
 
+import CheckInCheckOutModal from './CheckInCheckOutModal';
+
 import LogoDark from "../images/svg/logo-dark.svg";
 import LogoLight from "../images/svg/logo-light.svg";
 
@@ -200,12 +202,12 @@ const NavLinkStyled = styled(NavLink)(({ theme }) => ({
       fontWeight: theme.typography.fontWeightMedium,
     },
     "&:hover": {
-      background: "#9c06c9", // Darker shade for active link on hover
+      background: "#9c06c9", 
       transform: "translateX(2px)",
     },
   },
   "&:hover": {
-    background: theme.palette.mode === "light" ? "#f0cdee" : "#770aa5", // Lighter shade for non-active links
+    background: theme.palette.mode === "light" ? "#f0cdee" : "#770aa5", 
     transform: "translateX(2px)",
   },
 }));
@@ -351,6 +353,16 @@ const Layout: React.FC<LayoutProps> = () => {
     </>
   );
 
+  const handleCheckIn = () => {
+    console.log('Check-in recorded at:', new Date().toLocaleString());
+    // Add your check-in logic here
+  };
+
+  const handleCheckOut = () => {
+    console.log('Check-out recorded at:', new Date().toLocaleString());
+    // Add your check-out logic here
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <Box
@@ -396,6 +408,8 @@ const Layout: React.FC<LayoutProps> = () => {
             >
               {getPageTitle()}
             </Typography>
+
+            <CheckInCheckOutModal onCheckIn={handleCheckIn} onCheckOut={handleCheckOut} />
 
             <Tooltip title="Notifications">
               <IconButton
