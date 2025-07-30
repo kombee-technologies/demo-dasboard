@@ -2,7 +2,6 @@ import React from "react";
 import {
   Dialog,
   DialogTitle,
-  DialogContent,
   DialogActions,
   Button,
   Typography,
@@ -37,25 +36,23 @@ interface Employee {
   avatar?: string;
 }
 
-// Styled Backdrop with blur effect
 const BlurBackdrop = styled(Backdrop)(({ theme }) => ({
   zIndex: theme.zIndex.modal,
   backgroundColor: "rgba(0, 0, 0, 0.2)",
   backdropFilter: "blur(3px)",
-  WebkitBackdropFilter: "blur(5px)",
+  WebkitBackdropFilter: "blur(3px)",
 }));
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialog-paper": {
-    borderRadius: 2,
+    borderRadius: "12px",
     background: theme.palette.background.paper,
     boxShadow: theme.shadows[10],
     maxWidth: "680px",
     width: "100%",
-    margin: theme.spacing(2),
+    margin: theme.spacing(1),
     overflow: "hidden",
   },
-  // Add animation for smoother appearance
   "&.MuiDialog-root": {
     animation: "$fadeIn 0.3s ease-out",
   },
@@ -72,20 +69,15 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
 }));
 
 const StyledDialogTitle = styled(DialogTitle)(({ theme }) => ({
-  background: theme.palette.mode !== "light" ? "#f0cdee" : "#770aa5",
+  background: theme.palette.mode === "dark" ? "#f0cdee" : "#770aa5",
   color: theme.palette.primary.contrastText,
   display: "flex",
   justifyContent: "space-between",
   alignItems: "center",
-  padding: theme.spacing(3),
+  padding: theme.spacing(2, 3),
   "& .MuiTypography-root": {
     fontWeight: 600,
   },
-}));
-
-const StyledDialogContent = styled(DialogContent)(({ theme }) => ({
-  padding: theme.spacing(0),
-  background: theme.palette.background.default,
 }));
 
 const ProfileHeader = styled(Box)(({ theme }) => ({
@@ -93,8 +85,10 @@ const ProfileHeader = styled(Box)(({ theme }) => ({
   flexDirection: "column",
   alignItems: "center",
   padding: theme.spacing(4, 2),
-  background: theme.palette.mode === "light" ? "#c5a9c4ff" : "#770aa5",
-  color: theme.palette.primary.contrastText,
+  background: theme.palette.mode === "dark" ? "#3a0b52" : "#c5a9c4",
+  color: theme.palette.getContrastText(
+    theme.palette.mode === "dark" ? "#3a0b52" : "#c5a9c4"
+  ),
   position: "relative",
 }));
 
@@ -104,12 +98,13 @@ const EmployeeAvatar = styled(Avatar)(({ theme }) => ({
   marginBottom: theme.spacing(2),
   border: `4px solid ${theme.palette.background.paper}`,
   boxShadow: theme.shadows[3],
+  backgroundColor: theme.palette.mode === "dark" ? "#f0cdee" : "#770aa5",
 }));
 
 const InfoContainer = styled(Box)(({ theme }) => ({
   padding: theme.spacing(3),
   background: theme.palette.background.paper,
-  borderRadius: 2,
+  borderRadius: "8px",
   margin: theme.spacing(-2, 2, 2, 2),
   boxShadow: theme.shadows[2],
   position: "relative",
@@ -135,8 +130,8 @@ const InfoIcon = styled(Box)(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  background: theme.palette.mode === "light" ? "#f0cdee" : "#770aa5",
-  color: theme.palette.mode !== "light" ? "#f0cdee" : "#770aa5",
+  background: theme.palette.mode === "dark" ? "#f0cdee" : "#770aa5",
+  color: theme.palette.primary.contrastText,
   borderRadius: "50%",
   width: theme.spacing(4),
   height: theme.spacing(4),
@@ -144,25 +139,39 @@ const InfoIcon = styled(Box)(({ theme }) => ({
   flexShrink: 0,
 }));
 
-const StatusChip = styled(Chip)(({ theme }) => ({
+const StatusChip = styled(Chip, {
+  shouldForwardProp: (prop) => prop !== "status",
+})<{ status: string }>(({ theme, status }) => ({
   fontWeight: 600,
   textTransform: "uppercase",
   letterSpacing: "0.5px",
   padding: theme.spacing(0.5, 1),
-  borderRadius: theme.shape.borderRadius,
+  borderRadius: "8px",
+  ...(status.toLowerCase() === "active" && {
+    backgroundColor: theme.palette.mode === "dark" ? "#4caf50" : "#e8f5e9",
+    color: theme.palette.mode === "dark" ? "#e8f5e9" : "#2e7d32",
+  }),
+  ...(status.toLowerCase() === "on leave" && {
+    backgroundColor: theme.palette.mode === "dark" ? "#ff9800" : "#fff3e0",
+    color: theme.palette.mode === "dark" ? "#fff3e0" : "#e65100",
+  }),
+  ...(status.toLowerCase() === "terminated" && {
+    backgroundColor: theme.palette.mode === "dark" ? "#f44336" : "#ffebee",
+    color: theme.palette.mode === "dark" ? "#ffebee" : "#c62828",
+  }),
 }));
 
 const ActionButton = styled(Button)(({ theme }) => ({
-  borderRadius: 2,
-  background: `linear-gradient(45deg, #bf08fb 30%, #9c06c9 90%)`,
+  borderRadius: "8px",
+  background: theme.palette.mode === "dark" ? "#f0cdee" : "#770aa5",
+  color: theme.palette.primary.contrastText,
   padding: theme.spacing(1.5, 4),
   fontWeight: 600,
   letterSpacing: "0.5px",
   boxShadow: "none",
   "&:hover": {
-    background: `linear-gradient(45deg, #9c06c9 30%, #bf08fb 90%)`,
+    background: theme.palette.mode === "dark" ? "#e0b0d4" : "#66008f",
     boxShadow: theme.shadows[4],
-    transform: "translateY(-2px)",
   },
   transition: "all 0.3s ease",
 }));
@@ -180,19 +189,6 @@ const ViewEmployeeDetails: React.FC<ViewEmployeeDetailsProps> = ({
 }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-
-  const getStatusColor = (status: string) => {
-    switch (status.toLowerCase()) {
-      case "active":
-        return "success";
-      case "on leave":
-        return "warning";
-      case "terminated":
-        return "error";
-      default:
-        return "default";
-    }
-  };
 
   return (
     <>
@@ -223,152 +219,152 @@ const ViewEmployeeDetails: React.FC<ViewEmployeeDetailsProps> = ({
           </Button>
         </StyledDialogTitle>
 
-        <StyledDialogContent>
-          {employee ? (
-            <>
-              <ProfileHeader>
-                <EmployeeAvatar
-                  alt={employee.name}
-                  src={employee.avatar || "/static/images/avatar/1.jpg"}
-                />
-                <Typography variant="h5" fontWeight={600} gutterBottom>
-                  {employee.name}
-                </Typography>
-                <Typography variant="subtitle1" gutterBottom>
-                  {employee.position}
-                </Typography>
-                <StatusChip
-                  label={employee.status}
-                  color={getStatusColor(employee.status)}
-                  size="small"
-                  sx={{ mt: 1 }}
-                />
-              </ProfileHeader>
-
-              <InfoContainer>
-                <Grid container spacing={2}>
-                  <Grid size={{ xs: 12, md: 6 }}>
-                    <InfoItem>
-                      <InfoIcon>
-                        <Email fontSize="small" />
-                      </InfoIcon>
-                      <Box>
-                        <Typography variant="caption" color="textSecondary">
-                          Email
-                        </Typography>
-                        <Typography variant="body1">
-                          {employee.email}
-                        </Typography>
-                      </Box>
-                    </InfoItem>
-                  </Grid>
-
-                  <Grid size={{ xs: 12, md: 6 }}>
-                    <InfoItem>
-                      <InfoIcon>
-                        <Work fontSize="small" />
-                      </InfoIcon>
-                      <Box>
-                        <Typography variant="caption" color="textSecondary">
-                          Position
-                        </Typography>
-                        <Typography variant="body1">
-                          {employee.position}
-                        </Typography>
-                      </Box>
-                    </InfoItem>
-                  </Grid>
-
-                  <Grid size={{ xs: 12, md: 6 }}>
-                    <InfoItem>
-                      <InfoIcon>
-                        <Business fontSize="small" />
-                      </InfoIcon>
-                      <Box>
-                        <Typography variant="caption" color="textSecondary">
-                          Department
-                        </Typography>
-                        <Typography variant="body1">
-                          {employee.department}
-                        </Typography>
-                      </Box>
-                    </InfoItem>
-                  </Grid>
-
-                  <Grid size={{ xs: 12, md: 6 }}>
-                    <InfoItem>
-                      <InfoIcon>
-                        <Event fontSize="small" />
-                      </InfoIcon>
-                      <Box>
-                        <Typography variant="caption" color="textSecondary">
-                          Join Date
-                        </Typography>
-                        <Typography variant="body1">
-                          {employee.joinDate}
-                        </Typography>
-                      </Box>
-                    </InfoItem>
-                  </Grid>
-
-                  <Grid size={{ xs: 12, md: 6 }}>
-                    <InfoItem>
-                      <InfoIcon>
-                        <AttachMoney fontSize="small" />
-                      </InfoIcon>
-                      <Box>
-                        <Typography variant="caption" color="textSecondary">
-                          Salary
-                        </Typography>
-                        <Typography variant="body1">
-                          {employee.salary}
-                        </Typography>
-                      </Box>
-                    </InfoItem>
-                  </Grid>
-
-                  <Grid size={{ xs: 12, md: 6 }}>
-                    <InfoItem>
-                      <InfoIcon>
-                        <Person fontSize="small" />
-                      </InfoIcon>
-                      <Box>
-                        <Typography variant="caption" color="textSecondary">
-                          Status
-                        </Typography>
-                        <Typography variant="body1">
-                          {employee.status}
-                        </Typography>
-                      </Box>
-                    </InfoItem>
-                  </Grid>
-                </Grid>
-              </InfoContainer>
-            </>
-          ) : (
-            <Box
-              display="flex"
-              justifyContent="center"
-              alignItems="center"
-              minHeight="200px"
-            >
-              <Typography variant="body1" color="textSecondary">
-                No employee data available
+        {employee ? (
+          <>
+            <ProfileHeader>
+              <EmployeeAvatar
+                alt={employee.name}
+                src={employee.avatar || "/static/images/avatar/1.jpg"}
+              >
+                {!employee.avatar && <Person fontSize="large" />}
+              </EmployeeAvatar>
+              <Typography variant="h5" fontWeight={600} gutterBottom>
+                {employee.name}
               </Typography>
-            </Box>
-          )}
-        </StyledDialogContent>
+              <Typography variant="subtitle1" gutterBottom>
+                {employee.position}
+              </Typography>
+              <StatusChip
+                label={employee.status}
+                status={employee.status}
+                size="small"
+                sx={{ mt: 1 }}
+              />
+            </ProfileHeader>
+
+            <InfoContainer>
+              <Grid container spacing={2}>
+                <Grid size={{ xs: 12, md: 6, lg: 5 }}>
+                  <InfoItem>
+                    <InfoIcon>
+                      <Email fontSize="small" />
+                    </InfoIcon>
+                    <Box>
+                      <Typography variant="caption" color="textSecondary">
+                        Email
+                      </Typography>
+                      <Typography variant="body1">{employee.email}</Typography>
+                    </Box>
+                  </InfoItem>
+                </Grid>
+
+                <Grid size={{ xs: 12, md: 6, lg: 5 }}>
+                  <InfoItem>
+                    <InfoIcon>
+                      <Work fontSize="small" />
+                    </InfoIcon>
+                    <Box>
+                      <Typography variant="caption" color="textSecondary">
+                        Position
+                      </Typography>
+                      <Typography variant="body1">
+                        {employee.position}
+                      </Typography>
+                    </Box>
+                  </InfoItem>
+                </Grid>
+
+                <Grid size={{ xs: 12, md: 6, lg: 5 }}>
+                  <InfoItem>
+                    <InfoIcon>
+                      <Business fontSize="small" />
+                    </InfoIcon>
+                    <Box>
+                      <Typography variant="caption" color="textSecondary">
+                        Department
+                      </Typography>
+                      <Typography variant="body1">
+                        {employee.department}
+                      </Typography>
+                    </Box>
+                  </InfoItem>
+                </Grid>
+
+                <Grid size={{ xs: 12, md: 6, lg: 5 }}>
+                  <InfoItem>
+                    <InfoIcon>
+                      <Event fontSize="small" />
+                    </InfoIcon>
+                    <Box>
+                      <Typography variant="caption" color="textSecondary">
+                        Join Date
+                      </Typography>
+                      <Typography variant="body1">
+                        {employee.joinDate}
+                      </Typography>
+                    </Box>
+                  </InfoItem>
+                </Grid>
+
+                <Grid size={{ xs: 12, md: 6, lg: 5 }}>
+                  <InfoItem>
+                    <InfoIcon>
+                      <AttachMoney fontSize="small" />
+                    </InfoIcon>
+                    <Box>
+                      <Typography variant="caption" color="textSecondary">
+                        Salary
+                      </Typography>
+                      <Typography variant="body1">{employee.salary}</Typography>
+                    </Box>
+                  </InfoItem>
+                </Grid>
+
+                <Grid size={{ xs: 12, md: 6, lg: 5 }}>
+                  <InfoItem>
+                    <InfoIcon>
+                      <Person fontSize="small" />
+                    </InfoIcon>
+                    <Box>
+                      <Typography variant="caption" color="textSecondary">
+                        Status
+                      </Typography>
+                      <Typography variant="body1">
+                        <StatusChip
+                          label={employee.status}
+                          status={employee.status}
+                          size="small"
+                        />
+                      </Typography>
+                    </Box>
+                  </InfoItem>
+                </Grid>
+              </Grid>
+            </InfoContainer>
+          </>
+        ) : (
+          <Box
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            minHeight="200px"
+          >
+            <Typography variant="body1" color="textSecondary">
+              No employee data available
+            </Typography>
+          </Box>
+        )}
 
         <DialogActions
           sx={{
             padding: theme.spacing(2, 3),
             background: theme.palette.background.default,
+            borderTop: `1px solid ${theme.palette.divider}`,
           }}
         >
           <ActionButton
             onClick={onClose}
             variant="contained"
-            color="primary"
             fullWidth={isMobile}
           >
             Close

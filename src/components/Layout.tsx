@@ -40,11 +40,27 @@ import {
   Logout as LogoutIcon,
 } from "@mui/icons-material";
 import { NavLink, useLocation, Outlet } from "react-router-dom";
-
 import AttendanceTrackerModal from "./AttendanceTrackerModal";
-
+import ProfileDetailsModal from "./ProfileDetailsModal"; // Add this import
 import LogoDark from "../images/svg/logo-dark.svg";
 import LogoLight from "../images/svg/logo-light.svg";
+
+// Interface for profile data (matching ProfileDetailsModal)
+interface ProfileData {
+  id: string;
+  avatar: string;
+  fullName: string;
+  email: string;
+  phone: string;
+  gender: string;
+  dateOfBirth: string;
+  address: string;
+  jobTitle: string;
+  department: string;
+  education: string;
+  skills: string[];
+  bio: string;
+}
 
 interface LayoutProps {
   children?: React.ReactNode;
@@ -361,12 +377,33 @@ const Layout: React.FC<LayoutProps> = () => {
   const [mode, setMode] = React.useState<"light" | "dark">("light");
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [notificationCount] = React.useState<number>(3);
+  const [openProfileModal, setOpenProfileModal] = React.useState<boolean>(
+    false
+  ); // New state for profile modal
   const theme = getTheme(mode);
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const [open, setOpen] = React.useState<boolean>(!isMobile);
   const location = useLocation();
   const isMenuOpen = Boolean(anchorEl);
+
+  // Sample profile data for John Doe
+  const profileData: ProfileData = {
+    id: "1",
+    avatar: "/static/images/avatar/1.jpg",
+    fullName: "John Doe",
+    email: "john.doe@example.com",
+    phone: "+1 (555) 123-4567",
+    gender: "Male",
+    dateOfBirth: "1990-05-15",
+    address: "123 Main St, Springfield, IL 62701",
+    jobTitle: "Software Engineer",
+    department: "Engineering",
+    education: "B.Sc. Computer Science",
+    skills: ["JavaScript", "React", "Node.js", "TypeScript"],
+    bio:
+      "Experienced software engineer with a passion for building scalable web applications.",
+  };
 
   const handleDrawerToggle = () => {
     setOpen(!open);
@@ -390,8 +427,12 @@ const Layout: React.FC<LayoutProps> = () => {
   };
 
   const handleProfile = () => {
-    console.log("Navigate to profile");
+    setOpenProfileModal(true); // Open the profile modal
     handleMenuClose();
+  };
+
+  const handleProfileModalClose = () => {
+    setOpenProfileModal(false);
   };
 
   const getPageTitle = () => {
@@ -669,6 +710,13 @@ const Layout: React.FC<LayoutProps> = () => {
             <Outlet />
           </ContentContainer>
         </Main>
+
+        {/* Profile Modal */}
+        <ProfileDetailsModal
+          open={openProfileModal}
+          onClose={handleProfileModalClose}
+          profileData={profileData}
+        />
       </Box>
     </ThemeProvider>
   );
