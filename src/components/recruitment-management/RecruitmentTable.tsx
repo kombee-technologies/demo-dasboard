@@ -17,7 +17,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddEditRecruitmentDetails from "./AddEditRecruitmentDetails";
-import ViewRecruitmentDetails from "./ViewRecruitmentDetails"; 
+import ViewRecruitmentDetails from "./ViewRecruitmentDetails";
 
 // Interface for recruitment data
 interface Recruitment {
@@ -147,6 +147,38 @@ const recruitmentList: Recruitment[] = [
   },
 ];
 
+// Scrollable container for the DataGrid
+const ScrollableContainer = styled(Box)(({ theme }) => ({
+  width: "100%",
+  overflowX: "auto",
+  overflowY: "hidden",
+  "-webkit-overflow-scrolling": "touch",
+  scrollbarWidth: "thin",
+  scrollbarColor: `${theme.palette.grey[400]} ${theme.palette.grey[100]}`,
+  "&::-webkit-scrollbar": {
+    height: "10px",
+    display: "block",
+  },
+  "&::-webkit-scrollbar-thumb": {
+    backgroundColor: theme.palette.grey[500],
+    borderRadius: "5px",
+    border: `2px solid ${theme.palette.grey[100]}`,
+  },
+  "&::-webkit-scrollbar-track": {
+    backgroundColor: theme.palette.grey[100],
+    borderRadius: "5px",
+  },
+  [theme.breakpoints.down("sm")]: {
+    "-ms-overflow-style": "scrollbar",
+    "&::-webkit-scrollbar": {
+      height: "12px",
+    },
+  },
+  [theme.breakpoints.up("md")]: {
+    overflowX: "auto",
+  },
+}));
+
 const RecruitmentTable: React.FC = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -154,7 +186,7 @@ const RecruitmentTable: React.FC = () => {
     recruitmentList
   );
   const [openDialog, setOpenDialog] = useState(false);
-  const [openViewDialog, setOpenViewDialog] = useState(false); 
+  const [openViewDialog, setOpenViewDialog] = useState(false);
   const [selectedRecruitment, setSelectedRecruitment] = useState<
     Recruitment | undefined
   >(undefined);
@@ -309,13 +341,7 @@ const RecruitmentTable: React.FC = () => {
           Add Recruitment
         </StyledButton>
       </Stack>
-      <Box
-        sx={{
-          width: "100%",
-          overflow: "hidden",
-          borderRadius: theme.shape.borderRadius,
-        }}
-      >
+      <ScrollableContainer>
         <DataGrid
           rows={recruitment}
           columns={columns}
@@ -368,7 +394,8 @@ const RecruitmentTable: React.FC = () => {
             },
           }}
         />
-      </Box>
+      </ScrollableContainer>
+
       <AddEditRecruitmentDetails
         open={openDialog}
         onClose={() => setOpenDialog(false)}

@@ -99,6 +99,38 @@ const StyledIconButton = styled(IconButton)(({ theme }) => ({
   transition: "all 0.2s ease",
 }));
 
+// Scrollable container for the DataGrid
+const ScrollableContainer = styled(Box)(({ theme }) => ({
+  width: "100%",
+  overflowX: "auto",
+  overflowY: "hidden",
+  "-webkit-overflow-scrolling": "touch",
+  scrollbarWidth: "thin",
+  scrollbarColor: `${theme.palette.grey[400]} ${theme.palette.grey[100]}`,
+  "&::-webkit-scrollbar": {
+    height: "10px",
+    display: "block",
+  },
+  "&::-webkit-scrollbar-thumb": {
+    backgroundColor: theme.palette.grey[500],
+    borderRadius: "5px",
+    border: `2px solid ${theme.palette.grey[100]}`,
+  },
+  "&::-webkit-scrollbar-track": {
+    backgroundColor: theme.palette.grey[100],
+    borderRadius: "5px",
+  },
+  [theme.breakpoints.down("sm")]: {
+    "-ms-overflow-style": "scrollbar",
+    "&::-webkit-scrollbar": {
+      height: "12px",
+    },
+  },
+  [theme.breakpoints.up("md")]: {
+    overflowX: "auto",
+  },
+}));
+
 // Employee data
 const employeesList: Employee[] = [
   {
@@ -399,13 +431,7 @@ const EmployeeTable: React.FC = () => {
           Add Employee
         </StyledButton>
       </Stack>
-      <Box
-        sx={{
-          width: "100%",
-          overflow: "hidden",
-          borderRadius: theme.shape.borderRadius,
-        }}
-      >
+      <ScrollableContainer>
         <DataGrid
           rows={employees}
           columns={columns}
@@ -426,11 +452,15 @@ const EmployeeTable: React.FC = () => {
                 color: theme.palette.text.primary,
                 fontSize: isMobile ? "0.9rem" : "1rem",
               },
+              position: "sticky",
+              top: 0,
+              zIndex: 1,
             },
             "& .MuiDataGrid-cell": {
               padding: theme.spacing(2),
               borderBottom: `1px solid ${theme.palette.grey[100]}`,
               color: theme.palette.text.primary,
+              whiteSpace: "nowrap",
             },
             "& .MuiDataGrid-row": {
               transition: "all 0.3s ease",
@@ -458,7 +488,7 @@ const EmployeeTable: React.FC = () => {
             },
           }}
         />
-      </Box>
+      </ScrollableContainer>
       <AddEditEmployeeDetails
         open={openDialog}
         onClose={() => setOpenDialog(false)}

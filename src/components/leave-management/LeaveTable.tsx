@@ -147,6 +147,38 @@ const leaveList: Leave[] = [
   },
 ];
 
+// Scrollable container for the DataGrid
+const ScrollableContainer = styled(Box)(({ theme }) => ({
+  width: "100%",
+  overflowX: "auto",
+  overflowY: "hidden",
+  "-webkit-overflow-scrolling": "touch",
+  scrollbarWidth: "thin",
+  scrollbarColor: `${theme.palette.grey[400]} ${theme.palette.grey[100]}`,
+  "&::-webkit-scrollbar": {
+    height: "10px",
+    display: "block",
+  },
+  "&::-webkit-scrollbar-thumb": {
+    backgroundColor: theme.palette.grey[500],
+    borderRadius: "5px",
+    border: `2px solid ${theme.palette.grey[100]}`,
+  },
+  "&::-webkit-scrollbar-track": {
+    backgroundColor: theme.palette.grey[100],
+    borderRadius: "5px",
+  },
+  [theme.breakpoints.down("sm")]: {
+    "-ms-overflow-style": "scrollbar",
+    "&::-webkit-scrollbar": {
+      height: "12px",
+    },
+  },
+  [theme.breakpoints.up("md")]: {
+    overflowX: "auto",
+  },
+}));
+
 const LeaveTable: React.FC = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -302,13 +334,7 @@ const LeaveTable: React.FC = () => {
           Add Leave
         </StyledButton>
       </Stack>
-      <Box
-        sx={{
-          width: "100%",
-          overflow: "hidden",
-          borderRadius: theme.shape.borderRadius,
-        }}
-      >
+      <ScrollableContainer>
         <DataGrid
           rows={leaves}
           columns={columns}
@@ -361,7 +387,8 @@ const LeaveTable: React.FC = () => {
             },
           }}
         />
-      </Box>
+      </ScrollableContainer>
+
       <AddEditLeaveDetails
         open={openDialog}
         onClose={() => setOpenDialog(false)}
