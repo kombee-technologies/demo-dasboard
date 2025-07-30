@@ -17,6 +17,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddEditLeaveDetails from "./AddEditLeaveDetails";
+import ViewLeaveDetails from "./ViewLeaveDetails";
 
 // Interface for leave data
 interface Leave {
@@ -151,7 +152,10 @@ const LeaveTable: React.FC = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [leaves, setLeaves] = useState<Leave[]>(leaveList);
   const [openDialog, setOpenDialog] = useState(false);
-  const [selectedLeave, setSelectedLeave] = useState<Leave | undefined>(undefined);
+  const [openViewDialog, setOpenViewDialog] = useState(false); // New state for view modal
+  const [selectedLeave, setSelectedLeave] = useState<Leave | undefined>(
+    undefined
+  );
 
   const columns: GridColDef<Leave>[] = [
     {
@@ -227,7 +231,10 @@ const LeaveTable: React.FC = () => {
           <Tooltip title="View details">
             <StyledIconButton
               size="small"
-              onClick={() => console.log(`View ${params.row.id}`)}
+              onClick={() => {
+                setSelectedLeave(params.row);
+                setOpenViewDialog(true);
+              }}
             >
               <VisibilityIcon fontSize="small" color="primary" />
             </StyledIconButton>
@@ -264,15 +271,10 @@ const LeaveTable: React.FC = () => {
   const handleSubmit = (leaveRecord: Leave) => {
     if (leaveRecord.id) {
       setLeaves((prev) =>
-        prev.map((rec) =>
-          rec.id === leaveRecord.id ? leaveRecord : rec
-        )
+        prev.map((rec) => (rec.id === leaveRecord.id ? leaveRecord : rec))
       );
     } else {
-      setLeaves((prev) => [
-        ...prev,
-        { ...leaveRecord, id: Date.now() },
-      ]);
+      setLeaves((prev) => [...prev, { ...leaveRecord, id: Date.now() }]);
     }
   };
 
@@ -365,6 +367,11 @@ const LeaveTable: React.FC = () => {
         onClose={() => setOpenDialog(false)}
         leave={selectedLeave}
         onSubmit={handleSubmit}
+      />
+      <ViewLeaveDetails
+        open={openViewDialog}
+        onClose={() => setOpenViewDialog(false)}
+        leave={selectedLeave}
       />
     </StyledBox>
   );

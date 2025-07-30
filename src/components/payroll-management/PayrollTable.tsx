@@ -17,6 +17,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddEditPayrollDetails from "./AddEditPayrollDetails";
+import ViewPayrollDetails from "./ViewPayrollDetails"; // Add this import
 
 // Interface for payroll data
 interface Payroll {
@@ -157,7 +158,10 @@ const PayrollTable: React.FC = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [payroll, setPayroll] = useState<Payroll[]>(payrollList);
   const [openDialog, setOpenDialog] = useState(false);
-  const [selectedPayroll, setSelectedPayroll] = useState<Payroll | undefined>(undefined);
+  const [openViewDialog, setOpenViewDialog] = useState(false); // New state for view modal
+  const [selectedPayroll, setSelectedPayroll] = useState<Payroll | undefined>(
+    undefined
+  );
 
   const columns: GridColDef<Payroll>[] = [
     {
@@ -244,7 +248,10 @@ const PayrollTable: React.FC = () => {
           <Tooltip title="View details">
             <StyledIconButton
               size="small"
-              onClick={() => console.log(`View ${params.row.id}`)}
+              onClick={() => {
+                setSelectedPayroll(params.row);
+                setOpenViewDialog(true);
+              }}
             >
               <VisibilityIcon fontSize="small" color="primary" />
             </StyledIconButton>
@@ -281,15 +288,10 @@ const PayrollTable: React.FC = () => {
   const handleSubmit = (payrollRecord: Payroll) => {
     if (payrollRecord.id) {
       setPayroll((prev) =>
-        prev.map((rec) =>
-          rec.id === payrollRecord.id ? payrollRecord : rec
-        )
+        prev.map((rec) => (rec.id === payrollRecord.id ? payrollRecord : rec))
       );
     } else {
-      setPayroll((prev) => [
-        ...prev,
-        { ...payrollRecord, id: Date.now() },
-      ]);
+      setPayroll((prev) => [...prev, { ...payrollRecord, id: Date.now() }]);
     }
   };
 
@@ -382,6 +384,11 @@ const PayrollTable: React.FC = () => {
         onClose={() => setOpenDialog(false)}
         payroll={selectedPayroll}
         onSubmit={handleSubmit}
+      />
+      <ViewPayrollDetails
+        open={openViewDialog}
+        onClose={() => setOpenViewDialog(false)}
+        payroll={selectedPayroll}
       />
     </StyledBox>
   );

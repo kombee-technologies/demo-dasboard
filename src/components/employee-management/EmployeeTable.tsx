@@ -17,6 +17,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddEditEmployeeDetails from "./AddEditEmployeeDetails";
+import ViewEmployeeDetails from "./ViewEmployeeDetails";
 
 // Interface for employee data
 interface Employee {
@@ -237,6 +238,7 @@ const EmployeeTable: React.FC = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [employees, setEmployees] = useState<Employee[]>(employeesList);
   const [openDialog, setOpenDialog] = useState(false);
+  const [openViewDialog, setOpenViewDialog] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState<
     Employee | undefined
   >(undefined);
@@ -326,7 +328,10 @@ const EmployeeTable: React.FC = () => {
           <Tooltip title="View details">
             <StyledIconButton
               size="small"
-              onClick={() => console.log(`View ${params.row.id}`)}
+              onClick={() => {
+                setSelectedEmployee(params.row);
+                setOpenViewDialog(true);
+              }}
             >
               <VisibilityIcon fontSize="small" color="primary" />
             </StyledIconButton>
@@ -459,6 +464,11 @@ const EmployeeTable: React.FC = () => {
         onClose={() => setOpenDialog(false)}
         employee={selectedEmployee}
         onSubmit={handleSubmit}
+      />
+      <ViewEmployeeDetails
+        open={openViewDialog}
+        onClose={() => setOpenViewDialog(false)}
+        employee={selectedEmployee}
       />
     </StyledBox>
   );

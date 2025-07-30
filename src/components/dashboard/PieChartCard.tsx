@@ -165,8 +165,8 @@ const PieChartCard = () => {
               data={data}
               cx="50%"
               cy="50%"
-              innerRadius={theme.breakpoints.down("sm") ? 40 : 60}
-              outerRadius={theme.breakpoints.down("sm") ? 60 : 70}
+              innerRadius={theme.breakpoints.down("sm") ? 60 : 60}
+              outerRadius={theme.breakpoints.down("sm") ? 90 : 70}
               paddingAngle={2}
               dataKey="value"
               labelLine={false}

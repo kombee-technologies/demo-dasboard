@@ -17,6 +17,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddEditRecruitmentDetails from "./AddEditRecruitmentDetails";
+import ViewRecruitmentDetails from "./ViewRecruitmentDetails"; 
 
 // Interface for recruitment data
 interface Recruitment {
@@ -149,9 +150,14 @@ const recruitmentList: Recruitment[] = [
 const RecruitmentTable: React.FC = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const [recruitment, setRecruitment] = useState<Recruitment[]>(recruitmentList);
+  const [recruitment, setRecruitment] = useState<Recruitment[]>(
+    recruitmentList
+  );
   const [openDialog, setOpenDialog] = useState(false);
-  const [selectedRecruitment, setSelectedRecruitment] = useState<Recruitment | undefined>(undefined);
+  const [openViewDialog, setOpenViewDialog] = useState(false); 
+  const [selectedRecruitment, setSelectedRecruitment] = useState<
+    Recruitment | undefined
+  >(undefined);
 
   const columns: GridColDef<Recruitment>[] = [
     {
@@ -166,7 +172,7 @@ const RecruitmentTable: React.FC = () => {
               {params.row.candidateName}
             </Typography>
             <Typography variant="caption" color="text.secondary">
-              ID: {params.row.candidateId}
+              {params.row.candidateId}
             </Typography>
           </Box>
         </Box>
@@ -227,7 +233,10 @@ const RecruitmentTable: React.FC = () => {
           <Tooltip title="View details">
             <StyledIconButton
               size="small"
-              onClick={() => console.log(`View ${params.row.id}`)}
+              onClick={() => {
+                setSelectedRecruitment(params.row);
+                setOpenViewDialog(true);
+              }}
             >
               <VisibilityIcon fontSize="small" color="primary" />
             </StyledIconButton>
@@ -365,6 +374,11 @@ const RecruitmentTable: React.FC = () => {
         onClose={() => setOpenDialog(false)}
         recruitment={selectedRecruitment}
         onSubmit={handleSubmit}
+      />
+      <ViewRecruitmentDetails
+        open={openViewDialog}
+        onClose={() => setOpenViewDialog(false)}
+        recruitment={selectedRecruitment}
       />
     </StyledBox>
   );

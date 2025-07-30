@@ -17,7 +17,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddEditAttendanceDetails from "./AddEditAttendanceDetails";
-// import AddEditAttendanceDetails from "./AddEditAttendanceDetails";
+import ViewAttendanceDetails from "./ViewAttendanceDetails";
 
 // Interface for attendance data
 interface Attendance {
@@ -158,6 +158,7 @@ const AttendanceTable: React.FC = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [attendance, setAttendance] = useState<Attendance[]>(attendanceList);
   const [openDialog, setOpenDialog] = useState(false);
+  const [openViewDialog, setOpenViewDialog] = useState(false); // New state for view modal
   const [selectedAttendance, setSelectedAttendance] = useState<
     Attendance | undefined
   >(undefined);
@@ -247,7 +248,10 @@ const AttendanceTable: React.FC = () => {
           <Tooltip title="View details">
             <StyledIconButton
               size="small"
-              onClick={() => console.log(`View ${params.row.id}`)}
+              onClick={() => {
+                setSelectedAttendance(params.row);
+                setOpenViewDialog(true);
+              }}
             >
               <VisibilityIcon fontSize="small" color="primary" />
             </StyledIconButton>
@@ -385,6 +389,11 @@ const AttendanceTable: React.FC = () => {
         onClose={() => setOpenDialog(false)}
         attendance={selectedAttendance}
         onSubmit={handleSubmit}
+      />
+      <ViewAttendanceDetails
+        open={openViewDialog}
+        onClose={() => setOpenViewDialog(false)}
+        attendance={selectedAttendance}
       />
     </StyledBox>
   );
