@@ -21,6 +21,7 @@ import {
   useMediaQuery,
   Menu,
   MenuItem,
+  Breadcrumbs,
 } from "@mui/material";
 import {
   Menu as MenuIcon,
@@ -41,7 +42,7 @@ import {
 } from "@mui/icons-material";
 import { NavLink, useLocation, Outlet } from "react-router-dom";
 import AttendanceTrackerModal from "./AttendanceTrackerModal";
-import ProfileDetailsModal from "./ProfileDetailsModal"; // Add this import
+import ProfileDetailsModal from "./ProfileDetailsModal"; 
 import LogoDark from "../images/svg/logo-dark.svg";
 import LogoLight from "../images/svg/logo-light.svg";
 
@@ -144,6 +145,17 @@ const getTheme = (mode: "light" | "dark") =>
           },
         },
       },
+      MuiBreadcrumbs: {
+        styleOverrides: {
+          root: {
+            "& .MuiBreadcrumbs-separator": {
+              color: mode === "light" ? "#64748b" : "#b0bec5",
+              fontSize: "1.25rem",
+              margin: "0 8px",
+            },
+          },
+        },
+      },
     },
   });
 
@@ -161,9 +173,11 @@ const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
   background: theme.palette.background.paper,
   minHeight: "100vh",
   width: "100%",
-  "@media (max-width: 960px)": {
-    padding: theme.spacing(2),
-    marginLeft: 0,
+  Ascension: {
+    "@media (max-width: 960px)": {
+      padding: theme.spacing(2),
+      marginLeft: 0,
+    },
   },
 }));
 
@@ -427,7 +441,7 @@ const Layout: React.FC<LayoutProps> = () => {
   };
 
   const handleProfile = () => {
-    setOpenProfileModal(true); // Open the profile modal
+    setOpenProfileModal(true);
     handleMenuClose();
   };
 
@@ -532,19 +546,30 @@ const Layout: React.FC<LayoutProps> = () => {
                 </DrawerToggleButton>
               </Tooltip>
             )}
-            <Typography
-              variant="h6"
-              noWrap
-              component="div"
+            <Breadcrumbs
+              separator=">"
+              aria-label="breadcrumb"
               sx={{
-                fontWeight: 600,
                 flexGrow: 1,
-                letterSpacing: 0.2,
-                fontSize: isSmallScreen ? "1rem" : "1.25rem",
+                fontWeight: 600,
+                fontSize: isSmallScreen ? "0.875rem" : "1rem",
+                "& .MuiBreadcrumbs-li": {
+                  transition: "all 0.2s ease-in-out",
+                },
               }}
             >
-              {getPageTitle()}
-            </Typography>
+              <Typography
+                color="#bf08fb"
+                sx={{
+                  fontWeight: 600,
+                  "&:hover": {
+                    transform: "translateY(-1px)",
+                  },
+                }}
+              >
+                {getPageTitle()}
+              </Typography>
+            </Breadcrumbs>
 
             <AttendanceTrackerModal
               onCheckIn={handleCheckIn}
