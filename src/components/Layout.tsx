@@ -42,7 +42,7 @@ import {
 } from "@mui/icons-material";
 import { NavLink, useLocation, Outlet } from "react-router-dom";
 import AttendanceTrackerModal from "./AttendanceTrackerModal";
-import ProfileDetailsModal from "./ProfileDetailsModal"; 
+import ProfileDetailsModal from "./ProfileDetailsModal";
 import LogoDark from "../images/svg/logo-dark.svg";
 import LogoLight from "../images/svg/logo-light.svg";
 
@@ -105,6 +105,16 @@ const getTheme = (mode: "light" | "dark") =>
           fontSize: "0.875rem",
         },
       },
+      subtitle1: {
+        fontWeight: 400,
+        fontSize: "1rem",
+        "@media (max-width: 600px)": {
+          fontSize: "0.75rem",
+        },
+        "@media (max-width: 400px)": {
+          fontSize: "0.7rem",
+        },
+      },
     },
     components: {
       MuiButtonBase: {
@@ -150,8 +160,16 @@ const getTheme = (mode: "light" | "dark") =>
           root: {
             "& .MuiBreadcrumbs-separator": {
               color: mode === "light" ? "#64748b" : "#b0bec5",
-              fontSize: "1.25rem",
-              margin: "0 8px",
+              fontSize: "1rem",
+              margin: "0 6px",
+              "@media (max-width: 600px)": {
+                fontSize: "0.75rem",
+                margin: "0 4px",
+              },
+              "@media (max-width: 400px)": {
+                fontSize: "0.7rem",
+                margin: "0 3px",
+              },
             },
           },
         },
@@ -173,11 +191,9 @@ const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
   background: theme.palette.background.paper,
   minHeight: "100vh",
   width: "100%",
-  Ascension: {
-    "@media (max-width: 960px)": {
-      padding: theme.spacing(2),
-      marginLeft: 0,
-    },
+  "@media (max-width: 960px)": {
+    padding: theme.spacing(2),
+    marginLeft: 0,
   },
 }));
 
@@ -391,9 +407,8 @@ const Layout: React.FC<LayoutProps> = () => {
   const [mode, setMode] = React.useState<"light" | "dark">("light");
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [notificationCount] = React.useState<number>(3);
-  const [openProfileModal, setOpenProfileModal] = React.useState<boolean>(
-    false
-  ); // New state for profile modal
+  const [openProfileModal, setOpenProfileModal] =
+    React.useState<boolean>(false); // New state for profile modal
   const theme = getTheme(mode);
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
@@ -415,8 +430,7 @@ const Layout: React.FC<LayoutProps> = () => {
     department: "Engineering",
     education: "B.Sc. Computer Science",
     skills: ["JavaScript", "React", "Node.js", "TypeScript"],
-    bio:
-      "Experienced software engineer with a passion for building scalable web applications.",
+    bio: "Experienced software engineer with a passion for building scalable web applications.",
   };
 
   const handleDrawerToggle = () => {
@@ -552,16 +566,21 @@ const Layout: React.FC<LayoutProps> = () => {
               sx={{
                 flexGrow: 1,
                 fontWeight: 600,
-                fontSize: isSmallScreen ? "0.875rem" : "1rem",
+                fontSize: { xs: "0.85rem", sm: "0.95rem", md: "1rem" },
                 "& .MuiBreadcrumbs-li": {
                   transition: "all 0.2s ease-in-out",
                 },
+                maxWidth: { xs: "250px", sm: "550px", md: "none" },
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
               }}
             >
               <Typography
+                variant="subtitle1"
                 color="#bf08fb"
                 sx={{
-                  fontWeight: 600,
+                  fontWeight: 700,
                   "&:hover": {
                     transform: "translateY(-1px)",
                   },
